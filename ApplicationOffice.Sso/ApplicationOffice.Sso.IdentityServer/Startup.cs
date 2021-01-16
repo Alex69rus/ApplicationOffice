@@ -1,5 +1,7 @@
+using ApplicationOffice.Common.Api.Cors;
 using ApplicationOffice.Common.Api.Tracing;
 using ApplicationOffice.Common.Core.Extensions;
+using ApplicationOffice.Sso.Core.Services;
 using ApplicationOffice.Sso.Data;
 using ApplicationOffice.Sso.IdentityServer.Utils;
 using IdentityServer4.EntityFramework.Mappers;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -26,13 +29,32 @@ namespace ApplicationOffice.Sso.IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGlobalCors();
 
-            services.AddControllers();
+            services
+                .AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressConsumesConstraintForFormFileParameters = true;
+                    options.SuppressInferBindingSourcesForParameters = true;
+                    options.SuppressModelStateInvalidFilter = true;
+                    options.SuppressMapClientErrors = true;
+                });
+            services
+                .AddRouting(options => options.LowercaseUrls = true)
+                .AddApiVersioning(options => options.ReportApiVersions = true)
+                .AddVersionedApiExplorer(options =>
+                {
+                    options.GroupNameFormat = "'v'VVV";
+                    options.SubstituteApiVersionInUrl = true;
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApplicationOffice.Sso.IdentityServer", Version = "v1" });
             });
 
+            services.TryAddScoped<IUserService, UserService>();
             services.AddIS4(Configuration, Environment);
         }
 
@@ -47,12 +69,18 @@ namespace ApplicationOffice.Sso.IdentityServer
                 InitializeDatabase(app);
             }
 
+            app.UseRouting();
+
             app
                 .UseExceptionMiddleware()
                 .UseTraceIdHeaderMiddleware()
                 .UseSerilogRequestLogging();
 
+            app.UseDefaultCors();
+
             app.UseIdentityServer();
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
         private static void InitializeDatabase(IApplicationBuilder app)
