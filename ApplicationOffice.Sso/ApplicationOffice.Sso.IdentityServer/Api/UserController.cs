@@ -20,6 +20,7 @@ namespace ApplicationOffice.Sso.IdentityServer.Api
         [HttpGet]
         public async Task<IActionResult> Test()
         {
+            await Task.Yield();
             return Ok("test");
         }
     }
