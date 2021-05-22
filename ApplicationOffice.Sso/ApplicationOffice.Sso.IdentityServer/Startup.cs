@@ -1,29 +1,33 @@
-using ApplicationOffice.Common.Api.Cors;
-using ApplicationOffice.Common.Api.Tracing;
-using ApplicationOffice.Common.Core.Extensions;
-using ApplicationOffice.Sso.Core.Services;
-using ApplicationOffice.Sso.Data;
-using ApplicationOffice.Sso.IdentityServer.Utils;
-using IdentityServer4.EntityFramework.Mappers;
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using ApplicationOffice.Common.Api.Cors;
+using ApplicationOffice.Sso.IdentityServer.Tools;
+using ApplicationOffice.Sso.Data;
+using ApplicationOffice.Common.Core.Extensions;
+using IdentityServer4.EntityFramework.Mappers;
+using ApplicationOffice.Common.Data.Extensions;
+using ApplicationOffice.Common.Api.Tracing;
 using Serilog;
+using ApplicationOffice.Sso.Core.Services;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.OpenApi.Models;
 
-namespace ApplicationOffice.Sso.IdentityServer
+namespace ApplicationOffice.Sso.Is4
 {
     public class Startup
     {
+        public IWebHostEnvironment Environment { get; }
         public IConfiguration Configuration { get; }
-        public IHostEnvironment Environment { get; }
 
-        public Startup(IConfiguration configuration, IHostEnvironment env)
+        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
         {
-            Environment = env;
+            Environment = environment;
             Configuration = configuration;
         }
 
@@ -32,16 +36,16 @@ namespace ApplicationOffice.Sso.IdentityServer
             services.AddGlobalCors();
 
             services
-                .AddControllers()
+                .AddControllersWithViews()
                 .ConfigureApiBehaviorOptions(options =>
                 {
-                    options.SuppressConsumesConstraintForFormFileParameters = true;
-                    options.SuppressInferBindingSourcesForParameters = true;
-                    options.SuppressModelStateInvalidFilter = true;
-                    options.SuppressMapClientErrors = true;
+                    // options.SuppressConsumesConstraintForFormFileParameters = true;
+                    // options.SuppressInferBindingSourcesForParameters = true;
+                    // options.SuppressModelStateInvalidFilter = true;
+                    // options.SuppressMapClientErrors = true;
                 });
             services
-                .AddRouting(options => options.LowercaseUrls = true)
+                .AddRouting(/*options => options.LowercaseUrls = true*/)
                 .AddApiVersioning(options => options.ReportApiVersions = true)
                 .AddVersionedApiExplorer(options =>
                 {
@@ -55,23 +59,25 @@ namespace ApplicationOffice.Sso.IdentityServer
             });
 
             services.TryAddScoped<IUserService, UserService>();
+            services.AddAuthentication();
             services.AddIS4(Configuration, Environment);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApplicationOffice.Sso.IdentityServer v1"));
-                InitializeDatabase(app);
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApplicationOffice.Sso.IdentityServer v1"));
+            InitializeDatabase(app);
 
-            app.UseRouting();
+            app.UseAutoMigrations<ConfigurationDbContext>();
+            app.UseAutoMigrations<PersistedGrantDbContext>();
+            app.UseAutoMigrations<SsoDbContext>();
+
+            app.UseStaticFiles();
 
             app
+                .UseRouting()
                 .UseExceptionMiddleware()
                 .UseTraceIdHeaderMiddleware()
                 .UseSerilogRequestLogging();
@@ -79,8 +85,8 @@ namespace ApplicationOffice.Sso.IdentityServer
             app.UseDefaultCors();
 
             app.UseIdentityServer();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
         }
 
         private static void InitializeDatabase(IApplicationBuilder app)

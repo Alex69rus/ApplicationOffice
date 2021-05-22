@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationOffice.Common.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationOffice.Common.Api", "ApplicationOffice.Common.Api\ApplicationOffice.Common.Api.csproj", "{FEA772C4-B7B5-4D5C-B58B-33D371579B0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationOffice.Common.Data", "ApplicationOffice.Common.Data\ApplicationOffice.Common.Data.csproj", "{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{FEA772C4-B7B5-4D5C-B58B-33D371579B0E}.Release|x64.Build.0 = Release|Any CPU
 		{FEA772C4-B7B5-4D5C-B58B-33D371579B0E}.Release|x86.ActiveCfg = Release|Any CPU
 		{FEA772C4-B7B5-4D5C-B58B-33D371579B0E}.Release|x86.Build.0 = Release|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Debug|x64.Build.0 = Debug|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Release|x64.Build.0 = Release|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D87DFC8-2BE2-41A9-97D8-8197DB9A3D79}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

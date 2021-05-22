@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Sso.IdentityServer",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -13,22 +13,36 @@
             "args": [],
             "cwd": "${workspaceFolder}/ApplicationOffice.Sso.IdentityServer",
             "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
         },
         {
-            "name": ".NET Core Attach",
+            "name": "Sso.Client",
             "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
-        }
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/ApplicationOffice.Sso.Client/bin/Debug/net5.0/ApplicationOffice.Sso.Client.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ApplicationOffice.Sso.Client",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5003"
+            },
+        },
+        {
+            "name": "Sso.Is4",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/ApplicationOffice.Sso.Is4/bin/Debug/net5.0/ApplicationOffice.Sso.Is4.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ApplicationOffice.Sso.Is4",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+        },
     ]
 }

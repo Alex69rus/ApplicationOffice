@@ -46,15 +46,13 @@ namespace ApplicationOffice.Sso.Data
                 FactoriesConst.ConnectionString,
                 x => x
                     .CommandTimeout(3600)
-                    .MigrationsAssembly(typeof(PersistedGrantDbContextFactory).Assembly.GetName().Name)
-            );
+                    .MigrationsAssembly(typeof(PersistedGrantDbContextFactory).Assembly.GetName().Name));
 
             var is4Opts = new OperationalStoreOptions
             {
                 ConfigureDbContext = x => x.UseSqlServer(
                     FactoriesConst.ConnectionString,
-                    x => x.MigrationsAssembly(typeof(PersistedGrantDbContextFactory).Assembly.GetName().Name)
-                ),
+                    x => x.MigrationsAssembly(typeof(PersistedGrantDbContextFactory).Assembly.GetName().Name)),
                 DefaultSchema = PersistedGrantDbContext.DefaultSchema,
             };
 
@@ -72,8 +70,7 @@ namespace ApplicationOffice.Sso.Data
                 FactoriesConst.ConnectionString,
                 x => x
                     .CommandTimeout(3600)
-                    .MigrationsAssembly(typeof(SsoDbContextFactory).Assembly.GetName().Name)
-            );
+                    .MigrationsAssembly(typeof(SsoDbContextFactory).Assembly.GetName().Name));
 
             return new SsoDbContext(optionsBuilder.Options);
         }
