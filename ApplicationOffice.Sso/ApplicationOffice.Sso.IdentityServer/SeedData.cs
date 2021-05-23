@@ -1,8 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Claims;
 using ApplicationOffice.Sso.Data;
@@ -13,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace ApplicationOffice.Sso.Is4
+namespace ApplicationOffice.Sso.IdentityServer
 {
     public class SeedData
     {

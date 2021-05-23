@@ -1,15 +1,28 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
+﻿using IdentityModel;
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
-namespace ApplicationOffice.Sso.Is4
+namespace ApplicationOffice.Sso.IdentityServer
 {
     public static class Config
     {
-        public static IEnumerable<ApiScope> ApiScopes => new[] { new ApiScope("sso", "SSO scope.") };
+        public static IEnumerable<IdentityResource> Ids =>
+            new IdentityResource[]
+            {
+                new IdentityResources.OpenId(),
+
+                // // let's include the role claim in the profile
+                // new ProfileWithRoleIdentityResource(),
+
+                new IdentityResources.Profile(),
+                new IdentityResources.Email(),
+            };
+
+        public static IEnumerable<ApiScope> ApiScopes => new[]
+        {
+            new ApiScope("sso", "SSO scope."),
+            new ApiScope("weatherapi", "Weather API scope."), 
+        };
 
         public static IEnumerable<ApiResource> ApiResources => new[]
         {
@@ -20,9 +33,16 @@ namespace ApplicationOffice.Sso.Is4
                 ApiSecrets = {new Secret("secret".Sha256())},
                 Scopes = {"sso"},
             },
+            // new ApiResource("weatherapi", "The Weather API", new[] { JwtClaimTypes.Role }),
+            new ApiResource()
+            {
+                Name = "weatherapi",
+                Description = "The Weather API",
+                Scopes = {"weatherapi"},
+            },
         };
 
-        public static IEnumerable<Client> Clients => new[]
+    public static IEnumerable<Client> Clients => new[]
         {
             new Client
             {
@@ -35,6 +55,26 @@ namespace ApplicationOffice.Sso.Is4
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                 AllowedScopes = {"sso"},
             },
+            new Client
+            {
+                ClientId = "blazor",
+                AllowedGrantTypes = GrantTypes.Code,
+                RequirePkce = true,
+                RequireClientSecret = false,
+                AllowedCorsOrigins = { "https://localhost:5001" },
+                AllowedScopes = { "openid", "profile", "email", "weatherapi" },
+                RedirectUris = { "https://localhost:5001/authentication/login-callback" },
+                PostLogoutRedirectUris = { "https://localhost:5001/" },
+                Enabled = true
+            },
         };
+    }
+
+    public class ProfileWithRoleIdentityResource : IdentityResources.Profile
+    {
+        public ProfileWithRoleIdentityResource()
+        {
+            this.UserClaims.Add(JwtClaimTypes.Role);
+        }
     }
 }

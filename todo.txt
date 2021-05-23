@@ -1,0 +1,1 @@
+1. Figure out with log out redirect back reference

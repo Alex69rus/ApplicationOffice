@@ -1,8 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +14,7 @@ using ApplicationOffice.Sso.Core.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
 
-namespace ApplicationOffice.Sso.Is4
+namespace ApplicationOffice.Sso.IdentityServer
 {
     public class Startup
     {
@@ -39,13 +35,13 @@ namespace ApplicationOffice.Sso.Is4
                 .AddControllersWithViews()
                 .ConfigureApiBehaviorOptions(options =>
                 {
-                    // options.SuppressConsumesConstraintForFormFileParameters = true;
-                    // options.SuppressInferBindingSourcesForParameters = true;
-                    // options.SuppressModelStateInvalidFilter = true;
-                    // options.SuppressMapClientErrors = true;
+                    options.SuppressConsumesConstraintForFormFileParameters = true;
+                    options.SuppressInferBindingSourcesForParameters = true;
+                    options.SuppressModelStateInvalidFilter = true;
+                    options.SuppressMapClientErrors = true;
                 });
             services
-                .AddRouting(/*options => options.LowercaseUrls = true*/)
+                .AddRouting(options => options.LowercaseUrls = true)
                 .AddApiVersioning(options => options.ReportApiVersions = true)
                 .AddVersionedApiExplorer(options =>
                 {
@@ -68,11 +64,11 @@ namespace ApplicationOffice.Sso.Is4
             app.UseSwagger();
             app.UseSwaggerUI(c =>
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApplicationOffice.Sso.IdentityServer v1"));
-            InitializeDatabase(app);
 
             app.UseAutoMigrations<ConfigurationDbContext>();
             app.UseAutoMigrations<PersistedGrantDbContext>();
             app.UseAutoMigrations<SsoDbContext>();
+            InitializeDatabase(app);
 
             app.UseStaticFiles();
 
@@ -89,10 +85,13 @@ namespace ApplicationOffice.Sso.Is4
             app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
         }
 
-        private static void InitializeDatabase(IApplicationBuilder app)
+        private void InitializeDatabase(IApplicationBuilder app)
         {
             using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+
+            var connectionString = Configuration.GetConnectionString(nameof(SsoDbContext));
+            SeedData.EnsureSeedData(connectionString);
 
             context.Clients.RemoveRange(context.Clients);
             Config.Clients.ForEach(x => context.Clients.Add(x.ToEntity()));
@@ -102,6 +101,9 @@ namespace ApplicationOffice.Sso.Is4
 
             context.ApiResources.RemoveRange(context.ApiResources);
             Config.ApiResources.ForEach(x => context.ApiResources.Add(x.ToEntity()));
+
+            context.IdentityResources.RemoveRange(context.IdentityResources);
+            Config.Ids.ForEach(x => context.IdentityResources.Add(x.ToEntity()));
 
             context.SaveChanges();
         }

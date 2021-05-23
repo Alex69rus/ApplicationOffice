@@ -1,0 +1,48 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Sso.IdentityServer",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build:ApplicationOffice.Sso",
+            "program": "${workspaceFolder}/ApplicationOffice.Sso/ApplicationOffice.Sso.IdentityServer/bin/Debug/net5.0/ApplicationOffice.Sso.IdentityServer.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ApplicationOffice.Sso/ApplicationOffice.Sso.IdentityServer",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+        },
+        {
+            "name": "Web.Api",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build:ApplicationOffice.Web",
+            "program": "${workspaceFolder}/ApplicationOffice.Web/ApplicationOffice.Web.Api/bin/Debug/net5.0/ApplicationOffice.Web.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ApplicationOffice.Web/ApplicationOffice.Web.Api",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+        },
+        {
+            "name": "Web.UI",
+            "type": "blazorwasm",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/ApplicationOffice.Web/ApplicationOffice.Web.UI",
+            "preLaunchTask": "Build:ApplicationOffice.Web",
+        },
+    ],
+    "compounds": [
+        {
+            "name": "IS4 + Web.UI + Web.Api",
+            "configurations": [
+                "Sso.IdentityServer",
+                "Web.Api",
+                "Web.UI",
+            ],
+        }
+    ]
+}
