@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApplicationOffice.Approvals.Data\ApplicationOffice.Approvals.Data.csproj" />
+    <ProjectReference Include="..\..\ApplicationOffice.Common\ApplicationOffice.Common.Core\ApplicationOffice.Common.Core.csproj" />
+  </ItemGroup>
+
+</Project>

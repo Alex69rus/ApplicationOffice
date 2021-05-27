@@ -36,7 +36,7 @@ namespace ApplicationOffice.Common.Api.Tracing
             var (status, msg) = GetStatusCodeWithMessage(ex);
 
             context.Response.ContentType = MediaTypeNames.Application.Json;
-            context.Response.StatusCode = (int)status;
+            context.Response.StatusCode = (int) status;
 
             return context.Response.WriteAsync(new ErrorDetails { Message = msg, }.ToString());
         }
@@ -45,6 +45,7 @@ namespace ApplicationOffice.Common.Api.Tracing
         {
             ValidationException => (HttpStatusCode.BadRequest, ex.Message),
             NotFoundException => (HttpStatusCode.NotFound, ex.Message),
+            UnauthorizedException => (HttpStatusCode.Unauthorized, ex.Message),
             _ => (HttpStatusCode.InternalServerError, "Internal server error"),
         };
 

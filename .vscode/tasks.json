@@ -37,5 +37,17 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "Build:ApplicationOffice.Approvals",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/ApplicationOffice.Approvals/ApplicationOffice.Approvals.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }

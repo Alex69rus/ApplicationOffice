@@ -11,7 +11,7 @@ namespace ApplicationOffice.Common.Api.Cors
         /// <returns>Original <paramref name="applicationBuilder" />.</returns>
         public static IApplicationBuilder UseDefaultCors(this IApplicationBuilder applicationBuilder)
         {
-            return applicationBuilder.UseCors(CorsConstants.Cors);
+            return applicationBuilder.UseCors(AoCorsConstants.Cors);
         }
     }
 }

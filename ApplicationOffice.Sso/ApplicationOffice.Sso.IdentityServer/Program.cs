@@ -10,7 +10,6 @@ namespace ApplicationOffice.Sso.IdentityServer
         public static void Main(string[] args)
         {
             Console.Title = "ApplicationOffice SSO IdentityServer";
-
             CreateHostBuilder(args).Build().Run();
         }
 

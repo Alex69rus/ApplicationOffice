@@ -7,25 +7,17 @@ namespace ApplicationOffice.Common.Api.Cors
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        ///     Add default CORS settings.
+        /// Add default CORS settings.
         /// </summary>
         /// <param name="services">Service collection to add cors.</param>
         public static IServiceCollection AddGlobalCors(this IServiceCollection services) => services
             .AddCors(options => options
                 .AddPolicy(
-                    CorsConstants.Cors,
-                    builder =>
-                     {
-                         builder
-                             .AllowAnyOrigin()
-                             .AllowAnyHeader()
-                             .AllowAnyMethod();
-                     }
-                )
-            );
+                    AoCorsConstants.Cors,
+                    builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
         /// <summary>
-        ///     Add custom CORS settings.
+        /// Add custom CORS settings.
         /// </summary>
         /// <param name="services">Service collection to add cors.</param>
         /// <param name="policyName">Policy name.</param>
@@ -46,20 +38,17 @@ namespace ApplicationOffice.Common.Api.Cors
                              allowedOrigins
                                  .ToList()
                                  .IfEmpty(list => list.Add("*"))
-                                 .ToArray()
-                         );
+                                 .ToArray());
                          builder.WithHeaders(
                              allowedHeaders
                                  .ToList()
                                  .IfEmpty(list => list.Add("*"))
-                                 .ToArray()
-                         );
+                                 .ToArray());
                          builder.WithMethods(
                              allowedMethods
                                  .ToList()
                                  .IfEmpty(list => list.Add("*"))
-                                 .ToArray()
-                         );
+                                 .ToArray());
                          if (allowCredentials)
                              builder.AllowCredentials();
                      }
