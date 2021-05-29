@@ -10,6 +10,7 @@ namespace ApplicationOffice.Approvals.Data
         public DbSet<ApplicationApprover> ApplicationApprovers { get; protected set; } = default!;
         public DbSet<ApplicationField> ApplicationFields { get; protected set; } = default!;
         public DbSet<Unit> Units { get; protected set; } = default!;
+        public DbSet<UnitApprover> UnitApprovers { get; protected set; } = default!;
         public DbSet<User> Users { get; protected set; } = default!;
 
         public ApprovalsDbContext(DbContextOptions<ApprovalsDbContext> options) : base(options)
@@ -24,6 +25,7 @@ namespace ApplicationOffice.Approvals.Data
             modelBuilder.ApplyConfiguration(new ApplicationApproverConfiguration());
             modelBuilder.ApplyConfiguration(new ApplicationFieldConfiguration());
             modelBuilder.ApplyConfiguration(new UnitConfiguration());
+            modelBuilder.ApplyConfiguration(new UnitApproverConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
         }
     }

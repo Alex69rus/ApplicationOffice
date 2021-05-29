@@ -13,6 +13,7 @@ namespace ApplicationOffice.Approvals.Core.Tools
             services.AddApprovalsDbContext(configuration);
 
             services.AddScoped<IApplicationService, ApplicationService>();
+            services.AddScoped<IApplicationApproverService, ApplicationApproverService>();
 
             return services;
         }

@@ -10,13 +10,13 @@ namespace ApplicationOffice.Approvals.Data.Entities
         public DateTime ModifiedAt { get; set; }
 
         public string Name { get; set; }
-        public long UnitId { get; set; }
-        public Unit Unit { get; set; } = default!;
+        public long? UnitId { get; set; }
+        public Unit? Unit { get; set; }
 
         public ICollection<Application> CreatedApplications { get; protected set; }
         public ICollection<ApplicationApprover> Assignees { get; protected set; }
 
-        public User(string name, long unitId)
+        public User(string name, long? unitId)
         {
             CreatedAt = ModifiedAt = DateTime.UtcNow;
 

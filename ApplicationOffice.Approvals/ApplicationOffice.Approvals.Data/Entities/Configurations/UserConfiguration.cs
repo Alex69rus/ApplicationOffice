@@ -10,7 +10,7 @@ namespace ApplicationOffice.Approvals.Data.Entities.Configurations
             builder.ToTable("users");
             builder.HasKey(x => x.Id);
 
-            builder.HasOne(x => x.Unit).WithMany(x => x.Employee);
+            builder.HasOne(x => x.Unit).WithMany(x => x!.Employees).IsRequired(false);
         }
     }
 }

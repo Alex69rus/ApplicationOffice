@@ -3,12 +3,11 @@ using ApplicationOffice.Approvals.Core.Contracts.Enums;
 
 namespace ApplicationOffice.Approvals.Core.Contracts.Models
 {
-    public record ApplicationViewDto(
-        long Id,
-        DateTime CreatedAt,
-        DateTime ModifiedAt,
+    public record CreateApplicationRequestDto(
         string Title,
+        string Description,
         DateTime DueDate,
-        ApplicationStatus Status,
-        ApplicationType Type);
+        ApplicationType Type,
+        long AuthorId,
+        ApplicationFieldDto[] Fields);
 }

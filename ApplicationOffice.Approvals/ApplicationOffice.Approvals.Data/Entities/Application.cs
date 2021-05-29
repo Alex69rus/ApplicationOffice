@@ -42,5 +42,10 @@ namespace ApplicationOffice.Approvals.Data.Entities
             Approvers = new List<ApplicationApprover>();
             Fields = new List<ApplicationField>();
         }
+
+        public void SetStatus(ApplicationStatus status)
+        {
+            Status = status;
+        }
     }
 }

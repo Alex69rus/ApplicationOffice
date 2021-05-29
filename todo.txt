@@ -2,8 +2,9 @@
 
 
 
-
+2.1 Add auth to Approvals.API
 2. Make beauty Swagger
 3. Figure out with https and AuthChecking
 4. Add AUTH to Approvals.API
 5. Check changed from string to long SSO.User.Id and figure out
+6. Think about ErrorCodes for Exceptions and futher handling them on front-end

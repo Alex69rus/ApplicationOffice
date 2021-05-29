@@ -3,6 +3,7 @@ using ApplicationOffice.Approvals.Core.Contracts.Enums;
 namespace ApplicationOffice.Approvals.Core.Contracts.Models
 {
     public record ApplicationApproverDto(
-        UserViewDto Approver,
+        string Title,
+        UserViewDto User,
         ApplicationApproverStatus Status);
 }

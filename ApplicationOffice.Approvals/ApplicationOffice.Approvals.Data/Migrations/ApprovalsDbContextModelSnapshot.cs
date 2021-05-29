@@ -78,6 +78,10 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
@@ -133,18 +137,6 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("HrManagerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("HrManagerId1")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ManagerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ManagerId1")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
@@ -154,11 +146,39 @@ namespace ApplicationOffice.Approvals.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HrManagerId1");
-
-                    b.HasIndex("ManagerId1");
-
                     b.ToTable("units");
+                });
+
+            modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.UnitApprover", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .UseIdentityColumn();
+
+                    b.Property<long>("ApproverId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UnitId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApproverId");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("unit_approvers");
                 });
 
             modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.User", b =>
@@ -178,7 +198,7 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("UnitId")
+                    b.Property<long?>("UnitId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -229,28 +249,30 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                     b.Navigation("Application");
                 });
 
-            modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.Unit", b =>
+            modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.UnitApprover", b =>
                 {
-                    b.HasOne("ApplicationOffice.Approvals.Data.Entities.User", "HrManager")
+                    b.HasOne("ApplicationOffice.Approvals.Data.Entities.User", "Approver")
                         .WithMany()
-                        .HasForeignKey("HrManagerId1");
+                        .HasForeignKey("ApproverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("ApplicationOffice.Approvals.Data.Entities.User", "Manager")
-                        .WithMany()
-                        .HasForeignKey("ManagerId1");
+                    b.HasOne("ApplicationOffice.Approvals.Data.Entities.Unit", "Unit")
+                        .WithMany("Approvers")
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("HrManager");
+                    b.Navigation("Approver");
 
-                    b.Navigation("Manager");
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.User", b =>
                 {
                     b.HasOne("ApplicationOffice.Approvals.Data.Entities.Unit", "Unit")
-                        .WithMany("Employee")
-                        .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Employees")
+                        .HasForeignKey("UnitId");
 
                     b.Navigation("Unit");
                 });
@@ -264,7 +286,9 @@ namespace ApplicationOffice.Approvals.Data.Migrations
 
             modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.Unit", b =>
                 {
-                    b.Navigation("Employee");
+                    b.Navigation("Approvers");
+
+                    b.Navigation("Employees");
                 });
 
             modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.User", b =>

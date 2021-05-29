@@ -4,10 +4,14 @@ using ApplicationOffice.Approvals.Core.Contracts;
 using ApplicationOffice.Approvals.Core.Contracts.Enums;
 using ApplicationOffice.Approvals.Core.Contracts.Models;
 using ApplicationOffice.Approvals.Data;
+using ApplicationOffice.Approvals.Data.Entities;
 using ApplicationOffice.Common.Core.Exceptions;
+using ApplicationOffice.Common.Core.Extensions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using ApplicationFieldType = ApplicationOffice.Approvals.Data.Enums.ApplicationFieldType;
+using ApplicationType = ApplicationOffice.Approvals.Data.Enums.ApplicationType;
 
 namespace ApplicationOffice.Approvals.Core.Services
 {
@@ -61,6 +65,39 @@ namespace ApplicationOffice.Approvals.Core.Services
                     .ProjectTo<FullApplicationDto>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync()
                 ?? throw new NotFoundException("Application not found.");
+        }
+
+        public async Task<long> CreateApplication(CreateApplicationRequestDto request)
+        {
+            var author = await _dbContext.Users
+                .FirstOrDefaultAsync(x => x.Id == request.AuthorId);
+            if (author is null)
+                throw new BadRequestException("User not found");
+            if (!author.UnitId.HasValue)
+                throw new BadRequestException("User is not in a Unit");
+
+            var unitApprovers = await _dbContext.UnitApprovers
+                .Where(x => x.UnitId == author.UnitId)
+                .ToArrayAsync();
+            if (!unitApprovers.Any())
+                throw new BadRequestException("Unit doesn't have configured approvers");
+
+            var newApplication = new Application(
+                request.Title,
+                request.Description,
+                request.DueDate,
+                Data.Enums.ApplicationStatus.New,
+                (ApplicationType) request.Type,
+                request.AuthorId);
+            newApplication.Approvers.Add(unitApprovers.Select(x =>
+                new ApplicationApprover(x.Title, x.ApproverId, newApplication.Id)));
+            newApplication.Fields.Add(request.Fields.Select(x =>
+                new ApplicationField(newApplication.Id, (ApplicationFieldType) x.Type, x.Title, x.Value)));
+
+            _dbContext.Add(newApplication);
+            await _dbContext.SaveChangesAsync();
+
+            return newApplication.Id;
         }
     }
 }

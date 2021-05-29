@@ -9,9 +9,6 @@ namespace ApplicationOffice.Approvals.Data.Entities.Configurations
         {
             builder.ToTable("units");
             builder.HasKey(x => x.Id);
-
-            builder.HasOne(x => x.Manager);
-            builder.HasOne(x => x.HrManager);
         }
     }
 }
