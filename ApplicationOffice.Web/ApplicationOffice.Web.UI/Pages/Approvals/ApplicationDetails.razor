@@ -1,0 +1,13 @@
+@page "/approvals/applicationDetails/{applicationId:long}"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+<h3>ApplicationDetails</h3>
+
+<p>@ApplicationId was passed</p>
+
+@code {
+
+    [Parameter]
+    public long ApplicationId { get; set; }
+
+}

@@ -56,6 +56,10 @@
                 "Web.Api",
                 "Web.UI",
             ],
+        },
+        {
+            "name": "back-end",
+            "configurations": ["Sso.IdentityServer", "Approvals.Api"]
         }
     ]
 }

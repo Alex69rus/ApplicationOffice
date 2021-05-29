@@ -1,0 +1,16 @@
+@page "/approvals/newRegularVacationApplication"
+@attribute [Authorize]
+
+<h3>Заявка на регулярный отпуск</h3>
+
+@code {
+
+    private UnitApproverApiModel[] UnitApprovers { get; set; }
+    private FullUserApiModel CurrentUser { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+}

@@ -1,3 +1,4 @@
-1. Make beauty Swagger
-2. Check changed from string to long SSO.User.Id and figure out
-3. Think about ErrorCodes for Exceptions and futher handling them on front-end
+1. Figure out with log out redirect back reference
+2. Make beauty Swagger
+3. Figure out with User.Id field type. (Will be better string Id) 
+4. Think about ErrorCodes for Exceptions and futher handling them on front-end

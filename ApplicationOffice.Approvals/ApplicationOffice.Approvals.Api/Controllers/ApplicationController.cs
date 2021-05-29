@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ApplicationOffice.Approvals.Api.Models;
@@ -33,6 +34,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpGet("created")]
+        [ProducesResponseType(typeof(ApplicationViewDto[]), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetCreatedApplications(ApplicationStatus[]? statuses)
         {
             var applications = await _service.GetCreatedApplications(
@@ -43,6 +45,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpGet("onApproval")]
+        [ProducesResponseType(typeof(ApplicationViewDto[]), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetApprovalApplications(
             ApplicationStatus[]? statuses,
             ApplicationApproverStatus[]? approverStatuses)
@@ -56,6 +59,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpGet("{applicationId}")]
+        [ProducesResponseType(typeof(FullApplicationDto), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetApplicationInfo(long applicationId)
         {
             var applications = await _service.Get(applicationId);
@@ -64,6 +68,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(long), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> CreateApplication([FromBody] CreateApplicationCommand request)
         {
             var applicationId = await _service.CreateApplication(new CreateApplicationRequestDto(

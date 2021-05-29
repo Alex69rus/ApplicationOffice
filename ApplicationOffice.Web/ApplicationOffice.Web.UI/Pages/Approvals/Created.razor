@@ -1,0 +1,64 @@
+@page "/approvals/created"
+@using ApplicationOffice.Web.UI.Approvals.Models
+@inject HttpClient _httpClient
+@inject NavigationManager _navigation
+@attribute [Authorize]
+
+<h1>Ваши созданные заявки</h1>
+<MatButton Icon="library_add" OnClick='() => { _navigation.NavigateTo("/approvals/newRegularVacationApplication"); }'>Новая заявка</MatButton>
+
+@if (_applications == null)
+{
+    <p>
+        <em>Загрузка заявок...</em>
+    </p>
+}
+else if (!_applications.Any())
+{
+    <p>
+        <em>Здесь будут появляться заявки которые вы создали.</em>
+    </p>
+}
+else
+{
+    <MatTable Items="_applications" class="mat-elevation-z5" OnRowDbClick="OnApplicationClicked"
+              PageLabel="Страница" PageRecordCountLabel="Количество элементов" AllowSelection="true">
+        <MatTableHeader>
+            <th>№</th>
+            <th>Статус</th>
+            <th style="width: 15%">Согласовать до</th>
+            <th>Тип</th>
+            <th>Наименование</th>
+        </MatTableHeader>
+        <MatTableRow>
+            <td>@context.Id</td>
+            <td>
+                <ApplicationStatusLabel Status="@context.Status"/>
+            </td>
+            <td>@context.DueDate.ToString("dd.MM.yyyy")</td>
+            <td>
+                <ApplicationTypeLabel Type="@context.Type"/>
+            </td>
+            <td>@context.Title</td>
+        </MatTableRow>
+    </MatTable>
+}
+
+@code {
+    private ApplicationViewResponse[] _applications;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _applications = await _httpClient.GetFromJsonAsync<ApplicationViewResponse[]>(
+            "https://localhost:5003/api/v1/application/created");
+    }
+
+    void OnApplicationClicked(object item)
+    {
+        if (item is ApplicationViewResponse application)
+        {
+            _navigation.NavigateTo($"approvals/applicationDetails/{application.Id}");
+        }
+    }
+
+}

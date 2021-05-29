@@ -1,0 +1,12 @@
+@using ApplicationOffice.Web.UI.Approvals.Enums
+@if (Type == ApplicationType.RegularVacation)
+{
+    <MatChip LeadingIcon="flight_takeoff" Label="Регулярный отпуск"></MatChip>
+}
+
+@code {
+
+    [Parameter]
+    public ApplicationType Type { get; set; }
+
+}

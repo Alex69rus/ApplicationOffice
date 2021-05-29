@@ -1,0 +1,54 @@
+@page "/approvals/onApproval"
+@using ApplicationOffice.Web.UI.Approvals.Models
+@inject HttpClient Http
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+<h1>Заявки на согласовании</h1>
+
+@if (applications == null)
+{
+    <p>
+        <em>Загрузка заявок...</em>
+    </p>
+}
+else if (!applications.Any())
+{
+    <p>
+        <em>Здесь будут появляться заявки которые вам необходимо согласовать.</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Согласовать до</th>
+            <th>Статус</th>
+            <th>Тип</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var application in applications)
+        {
+            <tr>
+                <td>@application.Title</td>
+                <td>@application.DueDate.ToShortDateString()</td>
+                <td>@application.Status</td>
+                <td>@application.Type</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ApplicationViewResponse[] applications;
+
+    protected override async Task OnInitializedAsync()
+    {
+        applications = await Http.GetFromJsonAsync<ApplicationViewResponse[]>(
+            "https://localhost:5003/api/v1/application/onapproval");
+    }
+
+}

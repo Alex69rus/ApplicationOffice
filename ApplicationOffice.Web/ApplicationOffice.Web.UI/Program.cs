@@ -20,16 +20,13 @@ namespace ApplicationOffice.Web.UI
                 .AddHttpMessageHandler(sp => sp
                     .GetRequiredService<AuthorizationMessageHandler>()
                     .ConfigureHandler(
-                        authorizedUrls: new[] { "https://localhost:5002", "https://localhost:5002" },
-                        scopes: new[] { "weatherapi", "approvals" }));
+                        authorizedUrls: new[] {"https://localhost:5002", "https://localhost:5003"},
+                        scopes: new[] {"weatherapi", "approvals"}));
 
-            builder.Services.AddScoped(sp => sp.GetService<IHttpClientFactory>().CreateClient("api"));
+            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
 
             builder.Services
-                .AddOidcAuthentication(options =>
-                {
-                    builder.Configuration.Bind("oidc", options.ProviderOptions);
-                })
+                .AddOidcAuthentication(options => { builder.Configuration.Bind("oidc", options.ProviderOptions); })
                 .AddAccountClaimsPrincipalFactory<ArrayClaimsPrincipalFactory<RemoteUserAccount>>();
 
 

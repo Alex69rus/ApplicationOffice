@@ -31,7 +31,12 @@ namespace ApplicationOffice.Approvals.Core.Tools
                         .ToArray()));
             CreateMap<ApplicationField, ApplicationFieldDto>();
             CreateMap<User, UserViewDto>();
+            
             CreateMap<ApplicationApprover, ApplicationApproverDto>();
+
+            CreateMap<UnitApprover, UnitApproverDto>();
+            CreateMap<User, FullUserDto>()
+                .ForCtorParam(nameof(FullUserDto.UnitTitle), opt=> opt.MapFrom(src=>src.Unit!.Title)); // TODO: check if nullable works
         }
     }
 }

@@ -1,0 +1,20 @@
+@using ApplicationOffice.Web.UI.Approvals.Enums
+@if (Status == ApplicationStatus.New)
+{
+    <MatChip Style="background-color: skyblue" Label="Новая"></MatChip>
+}
+else if (Status == ApplicationStatus.Approved)
+{
+    <MatChip Style="background-color: #1e7e34" Label="Согласовано"></MatChip>
+}
+else if (Status == ApplicationStatus.Rejected)
+{
+    <MatChip Style="background-color: firebrick" Label="Отклонено"></MatChip>
+}
+
+@code {
+
+    [Parameter]
+    public ApplicationStatus Status { get; set; }
+
+}
