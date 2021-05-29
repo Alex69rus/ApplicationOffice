@@ -153,6 +153,36 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "units",
+                columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Title" },
+                values: new object[] { 1L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Отдел ИТ-разработки" });
+
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Name", "UnitId" },
+                values: new object[] { 1L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Петров Пётр Петрович", 1L });
+
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Name", "UnitId" },
+                values: new object[] { 2L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Иванов Иван Иванович", 1L });
+
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Name", "UnitId" },
+                values: new object[] { 3L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Алексеев Алексей Алексеевич", 1L });
+
+            migrationBuilder.InsertData(
+                table: "unit_approvers",
+                columns: new[] { "Id", "ApproverId", "CreatedAt", "ModifiedAt", "Title", "UnitId" },
+                values: new object[] { 1L, 1L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Руководитель отдела", 1L });
+
+            migrationBuilder.InsertData(
+                table: "unit_approvers",
+                columns: new[] { "Id", "ApproverId", "CreatedAt", "ModifiedAt", "Title", "UnitId" },
+                values: new object[] { 2L, 2L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Отдел кадров", 1L });
+
             migrationBuilder.CreateIndex(
                 name: "IX_application_approvers_ApplicationId",
                 table: "application_approvers",

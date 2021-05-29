@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ApplicationOffice.Sso.Data.Migrations.PersistedGrantDb
+namespace ApplicationOffice.Sso.Data.Migrations.PersistedGrant
 {
-    public partial class InitPersistedGrandSchema : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

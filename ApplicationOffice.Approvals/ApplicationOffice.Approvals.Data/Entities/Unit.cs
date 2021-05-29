@@ -14,6 +14,16 @@ namespace ApplicationOffice.Approvals.Data.Entities
         public ICollection<User> Employees { get; protected set; }
         public ICollection<UnitApprover> Approvers { get; protected set; }
 
+        public Unit(long id, DateTime createdAt, string title)
+        {
+            Id = id;
+            CreatedAt = ModifiedAt = createdAt;
+            Title = title;
+
+            Employees = new List<User>();
+            Approvers = new List<UnitApprover>();
+        }
+
         public Unit(string title)
         {
             CreatedAt = DateTime.UtcNow;

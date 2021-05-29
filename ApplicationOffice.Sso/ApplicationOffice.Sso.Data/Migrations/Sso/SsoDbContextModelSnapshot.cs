@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ApplicationOffice.Sso.Data.Migrations
+namespace ApplicationOffice.Sso.Data.Migrations.Sso
 {
     [DbContext(typeof(SsoDbContext))]
     partial class SsoDbContextModelSnapshot : ModelSnapshot

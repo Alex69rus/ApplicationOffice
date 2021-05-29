@@ -28,6 +28,19 @@
             },
         },
         {
+            "name": "Approvals.Api",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build:ApplicationOffice.Approvals",
+            "program": "${workspaceFolder}/ApplicationOffice.Approvals/ApplicationOffice.Approvals.Api/bin/Debug/net5.0/ApplicationOffice.Approvals.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ApplicationOffice.Approvals/ApplicationOffice.Approvals.Api",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+        },
+        {
             "name": "Web.UI",
             "type": "blazorwasm",
             "request": "launch",

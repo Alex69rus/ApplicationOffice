@@ -16,6 +16,17 @@ namespace ApplicationOffice.Approvals.Data.Entities
         public ICollection<Application> CreatedApplications { get; protected set; }
         public ICollection<ApplicationApprover> Assignees { get; protected set; }
 
+        internal User(long id, DateTime createdAt, string name, long? unitId)
+        {
+            Id = id;
+            CreatedAt = ModifiedAt = createdAt;
+            Name = name;
+            UnitId = unitId;
+
+            CreatedApplications = new List<Application>();
+            Assignees = new List<ApplicationApprover>();
+        }
+
         public User(string name, long? unitId)
         {
             CreatedAt = ModifiedAt = DateTime.UtcNow;

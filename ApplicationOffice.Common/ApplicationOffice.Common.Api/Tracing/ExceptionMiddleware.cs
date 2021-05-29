@@ -44,8 +44,9 @@ namespace ApplicationOffice.Common.Api.Tracing
         private static (HttpStatusCode, string errorMessage) GetStatusCodeWithMessage(Exception ex) => ex switch
         {
             ValidationException => (HttpStatusCode.BadRequest, ex.Message),
-            NotFoundException => (HttpStatusCode.NotFound, ex.Message),
+            BadRequestException => (HttpStatusCode.BadRequest, ex.Message),
             UnauthorizedException => (HttpStatusCode.Unauthorized, ex.Message),
+            NotFoundException => (HttpStatusCode.NotFound, ex.Message),
             _ => (HttpStatusCode.InternalServerError, "Internal server error"),
         };
 

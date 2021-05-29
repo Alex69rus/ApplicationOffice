@@ -10,51 +10,34 @@ namespace ApplicationOffice.Sso.IdentityServer
             new IdentityResource[]
             {
                 new IdentityResources.OpenId(),
-
-                // // let's include the role claim in the profile
-                // new ProfileWithRoleIdentityResource(),
-
                 new IdentityResources.Profile(),
                 new IdentityResources.Email(),
             };
 
         public static IEnumerable<ApiScope> ApiScopes => new[]
         {
-            new ApiScope("sso", "SSO scope."),
-            new ApiScope("weatherapi", "Weather API scope."), 
+            new ApiScope("weatherapi", "Weather API scope."),
+            new ApiScope("approvals", "Approvals API scope."),
         };
 
         public static IEnumerable<ApiResource> ApiResources => new[]
         {
-            new ApiResource
-            {
-                Name = "sso-gateway-api",
-                Description = "SSO gateway resource",
-                ApiSecrets = {new Secret("secret".Sha256())},
-                Scopes = {"sso"},
-            },
-            // new ApiResource("weatherapi", "The Weather API", new[] { JwtClaimTypes.Role }),
             new ApiResource()
             {
                 Name = "weatherapi",
                 Description = "The Weather API",
                 Scopes = {"weatherapi"},
             },
+            new ApiResource
+            {
+                Name = "approvals",
+                Description = "The Approvals API",
+                Scopes = {"approvals"},
+            }
         };
 
-    public static IEnumerable<Client> Clients => new[]
-        {
-            new Client
+        public static IEnumerable<Client> Clients => new[]
             {
-                ClientId = "sso-gateway-client",
-                ClientSecrets = {new Secret("secret".Sha256())},
-                AccessTokenType = AccessTokenType.Reference,
-                AllowOfflineAccess = true,
-                UpdateAccessTokenClaimsOnRefresh = true,
-                RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
-                AllowedScopes = {"sso"},
-            },
             new Client
             {
                 ClientId = "blazor",
@@ -62,7 +45,7 @@ namespace ApplicationOffice.Sso.IdentityServer
                 RequirePkce = true,
                 RequireClientSecret = false,
                 AllowedCorsOrigins = { "https://localhost:5001" },
-                AllowedScopes = { "openid", "profile", "email", "weatherapi" },
+                AllowedScopes = { "openid", "profile", "email", "weatherapi", "approvals" },
                 RedirectUris = { "https://localhost:5001/authentication/login-callback" },
                 PostLogoutRedirectUris = { "https://localhost:5001/" },
                 Enabled = true

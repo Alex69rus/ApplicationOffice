@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,6 +15,15 @@ namespace ApplicationOffice.Approvals.Data.Entities.Configurations
             builder
                 .HasOne(x => x.Unit)
                 .WithMany(x => x.Approvers);
+
+            builder.HasData(UnitApproverSeed);
         }
+
+        public static UnitApprover[] UnitApproverSeed
+            => new[]
+            {
+                new UnitApprover(1, new(2021, 05, 01, 0, 0, 0, DateTimeKind.Utc), "Руководитель отдела", 1, 1),
+                new UnitApprover(2, new(2021, 05, 01, 0, 0, 0, DateTimeKind.Utc), "Отдел кадров", 1, 2),
+            };
     }
 }

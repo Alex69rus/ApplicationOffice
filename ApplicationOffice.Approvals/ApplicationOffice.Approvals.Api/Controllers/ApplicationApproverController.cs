@@ -1,8 +1,10 @@
 using System.Net.Mime;
 using System.Threading.Tasks;
+using ApplicationOffice.Approvals.Api.Tools;
 using ApplicationOffice.Approvals.Core.Contracts;
 using ApplicationOffice.Approvals.Core.Contracts.Enums;
 using ApplicationOffice.Common.Api.Cors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +13,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
     /// <summary>
     /// Application approvers
     /// </summary>
-
-    // [Authorize] TODO: enable AUTH
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -36,17 +37,17 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpPut("{applicationId}/approve")]
-        public async Task<IActionResult> Approve(long applicationId, long approverId)
+        public async Task<IActionResult> Approve(long applicationId)
         {
-            await _service.MakeDecision(approverId, applicationId, ApplicationApproverStatus.Approved);
+            await _service.MakeDecision(User.GetUserIdOrThrow(), applicationId, ApplicationApproverStatus.Approved);
 
             return Ok();
         }
 
         [HttpPut("{applicationId}/reject")]
-        public async Task<IActionResult> Reject(long applicationId, long approverId)
+        public async Task<IActionResult> Reject(long applicationId)
         {
-            await _service.MakeDecision(approverId, applicationId, ApplicationApproverStatus.Rejected);
+            await _service.MakeDecision(User.GetUserIdOrThrow(), applicationId, ApplicationApproverStatus.Rejected);
 
             return Ok();
         }

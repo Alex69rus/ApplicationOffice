@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using ApplicationOffice.Common.Core.Constants;
 using ApplicationOffice.Sso.Data;
 using ApplicationOffice.Sso.Data.Entities;
 using IdentityModel;
@@ -32,69 +33,100 @@ namespace ApplicationOffice.Sso.IdentityServer
                     context.Database.Migrate();
 
                     var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<AoIdentityUser>>();
-                    var alice = userMgr.FindByNameAsync("alice").Result;
-                    if (alice == null)
+                    var petrov = userMgr.FindByNameAsync("pp.petrov").Result;
+                    if (petrov == null)
                     {
-                        alice = new AoIdentityUser
+                        petrov = new AoIdentityUser
                         {
-                            UserName = "alice",
-                            Email = "AliceSmith@email.com",
+                            UserName = "pp.petrov",
+                            Email = "PP.Petrov@mail.ru",
                             EmailConfirmed = true,
                         };
-                        var result = userMgr.CreateAsync(alice, "Pass123$").Result;
+                        var result = userMgr.CreateAsync(petrov, "P@$$w0rd").Result;
                         if (!result.Succeeded)
                         {
                             throw new Exception(result.Errors.First().Description);
                         }
 
-                        result = userMgr.AddClaimsAsync(alice, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "Alice Smith"),
-                            new Claim(JwtClaimTypes.GivenName, "Alice"),
-                            new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                            new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
+                        result = userMgr.AddClaimsAsync(petrov, new Claim[]{
+                            new Claim(JwtClaimTypes.Name, "Петров Пётр Петрович"),
+                            new Claim(JwtClaimTypes.GivenName, "Пётр"),
+                            new Claim(JwtClaimTypes.FamilyName, "Петров"),
+                            new Claim(AoClaims.UserId, "1"),
                         }).Result;
                         if (!result.Succeeded)
                         {
                             throw new Exception(result.Errors.First().Description);
                         }
-                        Log.Debug("alice created");
+                        Log.Debug("PP.Petrov created");
                     }
                     else
                     {
-                        Log.Debug("alice already exists");
+                        Log.Debug("PP.Petrov already exists");
                     }
 
-                    var bob = userMgr.FindByNameAsync("bob").Result;
-                    if (bob == null)
+                    var ivanov = userMgr.FindByNameAsync("ii.ivanov").Result;
+                    if (ivanov == null)
                     {
-                        bob = new AoIdentityUser
+                        ivanov = new AoIdentityUser
                         {
-                            UserName = "bob",
-                            Email = "BobSmith@email.com",
+                            UserName = "ii.ivanov",
+                            Email = "II.Ivanov@mail.ru",
                             EmailConfirmed = true
                         };
-                        var result = userMgr.CreateAsync(bob, "Pass123$").Result;
+                        var result = userMgr.CreateAsync(ivanov, "P@$$w0rd").Result;
                         if (!result.Succeeded)
                         {
                             throw new Exception(result.Errors.First().Description);
                         }
 
-                        result = userMgr.AddClaimsAsync(bob, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "Bob Smith"),
-                            new Claim(JwtClaimTypes.GivenName, "Bob"),
-                            new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                            new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
-                            new Claim("location", "somewhere")
+                        result = userMgr.AddClaimsAsync(ivanov, new Claim[]{
+                            new Claim(JwtClaimTypes.Name, "Иванов Иван"),
+                            new Claim(JwtClaimTypes.GivenName, "Иван"),
+                            new Claim(JwtClaimTypes.FamilyName, "Иванов"),
+                            new Claim(AoClaims.UserId, "2"),
                         }).Result;
                         if (!result.Succeeded)
                         {
                             throw new Exception(result.Errors.First().Description);
                         }
-                        Log.Debug("bob created");
+                        Log.Debug("Ivanov created");
                     }
                     else
                     {
-                        Log.Debug("bob already exists");
+                        Log.Debug("Ivanov already exists");
+                    }
+
+                    var alexeev = userMgr.FindByNameAsync("aa.alexeev").Result;
+                    if (alexeev == null)
+                    {
+                        alexeev = new AoIdentityUser
+                        {
+                            UserName = "aa.alexeev",
+                            Email = "AA.Alexeev@mail.ru",
+                            EmailConfirmed = true
+                        };
+                        var result = userMgr.CreateAsync(alexeev, "P@$$w0rd").Result;
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception(result.Errors.First().Description);
+                        }
+
+                        result = userMgr.AddClaimsAsync(alexeev, new Claim[]{
+                            new Claim(JwtClaimTypes.Name, "Алексеев Алексей"),
+                            new Claim(JwtClaimTypes.GivenName, "Алексей"),
+                            new Claim(JwtClaimTypes.FamilyName, "Алексеевич"),
+                            new Claim(AoClaims.UserId, "3"),
+                        }).Result;
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception(result.Errors.First().Description);
+                        }
+                        Log.Debug("Alexeev created");
+                    }
+                    else
+                    {
+                        Log.Debug("Alexeev already exists");
                     }
                 }
             }

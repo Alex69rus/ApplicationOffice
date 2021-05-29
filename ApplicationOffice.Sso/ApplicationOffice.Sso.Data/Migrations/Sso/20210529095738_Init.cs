@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ApplicationOffice.Sso.Data.Migrations
+namespace ApplicationOffice.Sso.Data.Migrations.Sso
 {
-    public partial class InitSsoSchema : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

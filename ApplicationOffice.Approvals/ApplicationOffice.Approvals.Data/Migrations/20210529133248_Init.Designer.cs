@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApplicationOffice.Approvals.Data.Migrations
 {
     [DbContext(typeof(ApprovalsDbContext))]
-    [Migration("20210529082509_Init")]
+    [Migration("20210529133248_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -149,6 +149,15 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("units");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Отдел ИТ-разработки"
+                        });
                 });
 
             modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.UnitApprover", b =>
@@ -181,6 +190,26 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                     b.HasIndex("UnitId");
 
                     b.ToTable("unit_approvers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            ApproverId = 1L,
+                            CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Руководитель отдела",
+                            UnitId = 1L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            ApproverId = 2L,
+                            CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Отдел кадров",
+                            UnitId = 1L
+                        });
                 });
 
             modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.User", b =>
@@ -208,6 +237,32 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                     b.HasIndex("UnitId");
 
                     b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Петров Пётр Петрович",
+                            UnitId = 1L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Иванов Иван Иванович",
+                            UnitId = 1L
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Алексеев Алексей Алексеевич",
+                            UnitId = 1L
+                        });
                 });
 
             modelBuilder.Entity("ApplicationOffice.Approvals.Data.Entities.Application", b =>

@@ -1,9 +1,14 @@
+using System;
+using System.Globalization;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using ApplicationOffice.Approvals.Api.Models;
+using ApplicationOffice.Approvals.Api.Tools;
 using ApplicationOffice.Approvals.Core.Contracts;
 using ApplicationOffice.Approvals.Core.Contracts.Enums;
 using ApplicationOffice.Approvals.Core.Contracts.Models;
 using ApplicationOffice.Common.Api.Cors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,8 +17,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
     /// <summary>
     /// Applications
     /// </summary>
-
-    // [Authorize] TODO: enable AUTH
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -28,24 +32,23 @@ namespace ApplicationOffice.Approvals.Api.Controllers
             _service = service;
         }
 
-        [HttpGet("created/{userId}")]
-        public async Task<IActionResult> GetCreatedApplications(ApplicationStatus[]? statuses, long userId)
+        [HttpGet("created")]
+        public async Task<IActionResult> GetCreatedApplications(ApplicationStatus[]? statuses)
         {
             var applications = await _service.GetCreatedApplications(
-                userId, // TODO: User.GetUserIdOrThrow(),
+                User.GetUserIdOrThrow(),
                 statuses);
 
             return Ok(applications);
         }
 
-        [HttpGet("onApproval/{userId}")]
+        [HttpGet("onApproval")]
         public async Task<IActionResult> GetApprovalApplications(
             ApplicationStatus[]? statuses,
-            ApplicationApproverStatus[]? approverStatuses,
-            long userId)
+            ApplicationApproverStatus[]? approverStatuses)
         {
             var applications = await _service.GetApprovalApplications(
-                userId, // TODO: User.GetUserIdOrThrow(),
+                User.GetUserIdOrThrow(),
                 statuses,
                 approverStatuses);
 
@@ -53,7 +56,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpGet("{applicationId}")]
-        public async Task<IActionResult> GetApprovalApplications(long applicationId)
+        public async Task<IActionResult> GetApplicationInfo(long applicationId)
         {
             var applications = await _service.Get(applicationId);
 
@@ -61,13 +64,31 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateApplication([FromBody] CreateApplicationRequestDto request)
+        public async Task<IActionResult> CreateApplication([FromBody] CreateApplicationCommand request)
         {
-            var applicationId = await _service.CreateApplication(request);
+            var applicationId = await _service.CreateApplication(new CreateApplicationRequestDto(
+                $"{User.GetNameOrThrow()} - регулярный отпуск",
+                request.Description,
+                DateTime.UtcNow.Date.AddDays(4),
+                ApplicationType.RegularVacation,
+                User.GetUserIdOrThrow(),
+                new[]
+                {
+                    new ApplicationFieldDto(
+                        ApplicationFieldType.DateTime,
+                        "Отпуск с",
+                        request.VacationFrom.Date.ToString(CultureInfo.InvariantCulture)),
+                    new ApplicationFieldDto(
+                        ApplicationFieldType.DateTime,
+                        "Отпуск по",
+                        request.VacationTo.Date.ToString(CultureInfo.InvariantCulture)),
+                    new ApplicationFieldDto(
+                        ApplicationFieldType.Long,
+                        "Количество дней",
+                        ((request.VacationTo.Date - request.VacationFrom.Date).Days + 1).ToString()),
+                }));
 
             return Ok(applicationId);
         }
-
-        // TODO: fix userIds thould be fetched from Auth
     }
 }

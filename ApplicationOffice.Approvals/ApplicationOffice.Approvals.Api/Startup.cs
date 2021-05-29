@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationOffice.Approvals.Api.Tools;
 using ApplicationOffice.Approvals.Core.Tools;
 using ApplicationOffice.Approvals.Data;
 using ApplicationOffice.Common.Api.Cors;
@@ -35,32 +36,9 @@ namespace ApplicationOffice.Approvals.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddGlobalCors()
-                .AddRouting(options => options.LowercaseUrls = true)
-                .AddApiVersioning(opts =>
-                {
-                    opts.DefaultApiVersion = new ApiVersion(1, 0);
-                    opts.ReportApiVersions = true;
-                    opts.AssumeDefaultVersionWhenUnspecified = true;
-                })
-                .AddVersionedApiExplorer(opts =>
-                {
-                    opts.GroupNameFormat = "'v'VVV";
-                    opts.SubstituteApiVersionInUrl = true;
-                })
-                .AddControllers()
-                .ConfigureApiBehaviorOptions(options =>
-                {
-                    options.SuppressConsumesConstraintForFormFileParameters = true;
-                    options.SuppressInferBindingSourcesForParameters = true;
-                    options.SuppressModelStateInvalidFilter = true;
-                    options.SuppressMapClientErrors = true;
-                });
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApplicationOffice.Approvals.Api", Version = "v1"});
-            });
+                .AddAuth()
+                .AddAPI()
+                .AddApiSwagger();
 
             services.AddAutoMapper(opt => opt.AddProfile(new CoreMappingProfile()));
             services.AddCore(Configuration);

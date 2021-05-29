@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApplicationOffice.Sso.Data
 {
-    public class SsoDbContext : IdentityDbContext<AoIdentityUser, AoIdentityRole, long>
+    public class SsoDbContext : IdentityDbContext<AoIdentityUser, AoIdentityRole, string>
     {
         public const string DefaultSchema = "sso";
 

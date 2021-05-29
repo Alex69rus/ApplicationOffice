@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ApplicationOffice.Sso.Data.Migrations.ConfigurationDb
+namespace ApplicationOffice.Sso.Data.Migrations.Configuration
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20210116133936_InitConfigurationSchema")]
-    partial class InitConfigurationSchema
+    [Migration("20210529095720_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

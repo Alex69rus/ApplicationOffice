@@ -14,6 +14,15 @@ namespace ApplicationOffice.Approvals.Data.Entities
         public long ApproverId { get; protected set; }
         public User Approver { get; protected set; } = default!;
 
+        internal UnitApprover(long id, DateTime createdAt, string title, long unitId, long approverId)
+        {
+            Id = id;
+            CreatedAt = ModifiedAt = createdAt;
+            Title = title;
+            UnitId = unitId;
+            ApproverId = approverId;
+        }
+
         public UnitApprover(string title, long unitId, long approverId)
         {
             CreatedAt = ModifiedAt = DateTime.UtcNow;

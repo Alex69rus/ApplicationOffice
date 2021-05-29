@@ -67,8 +67,8 @@ namespace ApplicationOffice.Web.Api
 
             app
                 .UseRouting()
-                // .UseExceptionMiddleware()
-                // .UseTraceIdHeaderMiddleware()
+                .UseExceptionMiddleware()
+                .UseTraceIdHeaderMiddleware()
                 .UseSerilogRequestLogging();
 
             app
