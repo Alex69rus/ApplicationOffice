@@ -69,7 +69,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(long), (int) HttpStatusCode.OK)]
-        public async Task<IActionResult> CreateApplication([FromBody] CreateApplicationCommand request)
+        public async Task<IActionResult> CreateRegularVacationApplication([FromBody] CreateRegularVacationApplicationCommand request)
         {
             var applicationId = await _service.CreateApplication(new CreateApplicationRequestDto(
                 $"{User.GetNameOrThrow()} - регулярный отпуск",

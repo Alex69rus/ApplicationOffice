@@ -1,0 +1,33 @@
+@using System.ComponentModel.DataAnnotations
+
+@if (Position is not null)
+{
+    <div class="ao-user-2l-chip">
+        <img src="/Images/blank-avatar.png" alt="Person" width="96" height="96">
+        @Name<br/>@Position
+    </div>
+}
+else
+{
+    <div class="ao-user-chip">
+        <img src="/Images/blank-avatar.png" alt="Person" width="96" height="96">
+        @Name
+    </div>
+}
+@code {
+
+    [Required]
+    [Parameter]
+    public long UserId { get; set; }
+
+    [Required]
+    [Parameter]
+    public string Name { get; set; } = default!;
+
+    [Parameter]
+    public long? UnitId { get; set; }
+
+    [Parameter]
+    public string? Position { get; set; }
+
+}

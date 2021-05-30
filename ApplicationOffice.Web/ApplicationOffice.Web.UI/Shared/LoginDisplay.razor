@@ -6,7 +6,7 @@
 
 <AuthorizeView>
     <Authorized>
-        Здавствуйте, @context.User.Identity.Name!
+        Здавствуйте, @context.User.Identity?.Name!
         <button class="nav-link btn btn-link" @onclick="BeginSignOut">Выход</button>
     </Authorized>
     <NotAuthorized>

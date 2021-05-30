@@ -14,6 +14,8 @@ namespace ApplicationOffice.Approvals.Core.Tools
 
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<IApplicationApproverService, ApplicationApproverService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUnitApproverService, UnitApproverService>();
 
             return services;
         }

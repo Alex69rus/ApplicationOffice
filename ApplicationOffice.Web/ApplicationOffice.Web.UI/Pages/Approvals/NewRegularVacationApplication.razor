@@ -1,16 +1,106 @@
 @page "/approvals/newRegularVacationApplication"
+@using ApplicationOffice.Web.UI.Approvals.Models
+@using System.ComponentModel.DataAnnotations
+@using ApplicationOffice.Web.UI.Tools
+@inject HttpClient _httpClient
+@inject NavigationManager _navigation
+@inject IMatToaster _toaster
 @attribute [Authorize]
 
-<h3>Заявка на регулярный отпуск</h3>
+<MatHeadline4>Согласующие</MatHeadline4>
+@if (UnitApprovers is null)
+{
+    <p>
+        <em>Загрузка согласующих</em>
+    </p>
+    <MatProgressBar Indeterminate="true"/>
+}
+else if (!UnitApprovers.Any())
+{
+    <MatH5>Для вашего отдела не указаны согласующие.</MatH5>
+}
+else
+{
+    foreach (var unitApprover in UnitApprovers)
+    {
+        <UserCard UserId="@unitApprover.Approver.Id" Name="@unitApprover.Approver.Name" UnitId="@unitApprover.UnitId" Position="@unitApprover.Title"/>
+    }
+}
+
+<MatH5>Заявка на регулярный отпуск:</MatH5>
+
+<EditForm Model="NewRequest" OnValidSubmit="Success">
+    <DataAnnotationsValidator/>
+
+    <p>
+        <MatDatePicker Label="Дата начала отпуска" @bind-Value="NewRequest.VacationFrom"/>
+    </p>
+    <p>
+        <MatDatePicker Label="Дата окончания отпуска" @bind-Value="NewRequest.VacationTo"/>
+    </p>
+    <p>
+        <MatTextField Label="Описание" @bind-Value="NewRequest.Description" TextArea="true" Dense="true"/>
+    </p>
+    <MatDivider/>
+    <ValidationSummary/>
+    <br/>
+    <MatButton Type="submit" Raised="true">Создать</MatButton>
+    <MatButton Raised="true" OnClick="Cancel">Отмена</MatButton>
+</EditForm>
 
 @code {
 
-    private UnitApproverApiModel[] UnitApprovers { get; set; }
-    private FullUserApiModel CurrentUser { get; set; }
+    private UnitApproverApiModel[]? UnitApprovers { get; set; }
+    private FullUserApiModel? CurrentUser { get; set; }
 
-    protected override Task OnInitializedAsync()
+    private CreateRegularVacationApplicationCommand NewRequest { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
+
+        CurrentUser = await _httpClient.GetFromJsonAsync<FullUserApiModel>("https://localhost:5003/api/v1/user");
+
+        if (CurrentUser is not null)
+            UnitApprovers = await _httpClient.GetFromJsonAsync<UnitApproverApiModel[]>(
+                $"https://localhost:5003/api/v1/unitapprover/{CurrentUser.UnitId}");
+    }
+
+    private async Task Success()
+    {
+        var resp = await _httpClient.PostAsJsonAsync("https://localhost:5003/api/v1/application", NewRequest);
+        var error = await resp.Validate();
+
+        if (error is not null)
+        {
+            _toaster.Add(error.Message, MatToastType.Danger);
+            return;
+        }
+
+        _toaster.Add("Заявка была успешно создана", MatToastType.Success);
+        _navigation.NavigateTo(_navigation.BaseUri);
+    }
+
+    private void Cancel()
+    {
+        _navigation.NavigateTo(_navigation.BaseUri);
+    }
+
+    public class CreateRegularVacationApplicationCommand : IValidatableObject
+    {
+        public string? Description { get; set; }
+        public DateTime VacationFrom { get; set; }
+        public DateTime VacationTo { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Description is null)
+                yield return new ValidationResult("Необходимо заполнить описание");
+            if (VacationFrom.Date <= DateTime.Now.Date)
+                yield return new ValidationResult("Неверная дата начала отпуска");
+            if (VacationTo.Date < VacationFrom)
+                yield return new ValidationResult("Неверная дата окончания отпуска");
+        }
     }
 
 }

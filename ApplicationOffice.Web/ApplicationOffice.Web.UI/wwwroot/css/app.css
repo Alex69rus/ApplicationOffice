@@ -48,3 +48,39 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.ao-user-chip {
+    display: inline-block;
+    padding: 0 25px;
+    height: 60px;
+    font-size: 16px;
+    line-height: 60px;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+    margin: 10px;
+}
+.ao-user-chip img {
+    float: left;
+    margin: 0 10px 0 -25px;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+}
+
+.ao-user-2l-chip {
+    display: inline-block;
+    padding: 0 25px;
+    height: 60px;
+    font-size: 16px;
+    line-height: 30px;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+    margin: 10px;
+}
+.ao-user-2l-chip img {
+    float: left;
+    margin: 0 10px 0 -25px;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+}

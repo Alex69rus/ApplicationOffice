@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApplicationOffice.Approvals.Api.Models
 {
-    public class CreateApplicationCommand : IValidatableObject
+    public class CreateRegularVacationApplicationCommand : IValidatableObject
     {
         [Required]
         public string Description { get; set; } = default!;
@@ -14,9 +14,9 @@ namespace ApplicationOffice.Approvals.Api.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (VacationFrom.Date.AddDays(1) <= DateTime.UtcNow.Date)
+            if (VacationFrom.Date <= DateTime.UtcNow.Date)
                 yield return new ValidationResult("Неверная дата начала отпуска");
-            if (VacationTo.Date <= VacationFrom)
+            if (VacationTo.Date < VacationFrom)
                 yield return new ValidationResult("Неверная дата окончания отпуска");
         }
     }

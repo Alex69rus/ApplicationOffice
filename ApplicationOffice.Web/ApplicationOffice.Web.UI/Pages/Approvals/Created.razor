@@ -4,10 +4,10 @@
 @inject NavigationManager _navigation
 @attribute [Authorize]
 
-<h1>Ваши созданные заявки</h1>
+<MatH4>Ваши созданные заявки</MatH4>
 <MatButton Icon="library_add" OnClick='() => { _navigation.NavigateTo("/approvals/newRegularVacationApplication"); }'>Новая заявка</MatButton>
 
-@if (_applications == null)
+@if (_applications is null)
 {
     <p>
         <em>Загрузка заявок...</em>
@@ -45,7 +45,7 @@ else
 }
 
 @code {
-    private ApplicationViewResponse[] _applications;
+    private ApplicationViewResponse[]? _applications;
 
     protected override async Task OnInitializedAsync()
     {

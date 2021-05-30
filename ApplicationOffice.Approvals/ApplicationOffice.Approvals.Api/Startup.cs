@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ApplicationOffice.Approvals.Api.Tools;
 using ApplicationOffice.Approvals.Core.Tools;
 using ApplicationOffice.Approvals.Data;
@@ -11,15 +7,9 @@ using ApplicationOffice.Common.Core.Extensions;
 using ApplicationOffice.Common.Data.Extensions;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using Serilog;
 
 namespace ApplicationOffice.Approvals.Api

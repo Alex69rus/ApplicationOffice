@@ -8,7 +8,7 @@ namespace ApplicationOffice.Web.UI.Approvals.Models
         public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-        public string Title { get; set; }
+        public string Title { get; set; } = default!;
         public DateTime DueDate { get; set; }
         public ApplicationStatus Status { get; set; }
         public ApplicationType Type { get; set; }

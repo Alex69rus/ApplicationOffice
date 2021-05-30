@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using ApplicationOffice.Web.UI.Tools;
+using MatBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,15 @@ namespace ApplicationOffice.Web.UI
                 .AddOidcAuthentication(options => { builder.Configuration.Bind("oidc", options.ProviderOptions); })
                 .AddAccountClaimsPrincipalFactory<ArrayClaimsPrincipalFactory<RemoteUserAccount>>();
 
+            builder.Services.AddMatToaster(config =>
+            {
+                config.Position = MatToastPosition.TopRight;
+                config.PreventDuplicates = true;
+                config.NewestOnTop = true;
+                config.ShowCloseButton = true;
+                config.MaximumOpacity = 95;
+                config.VisibleStateDuration = 3000;
+            });
 
             await builder.Build().RunAsync();
         }
