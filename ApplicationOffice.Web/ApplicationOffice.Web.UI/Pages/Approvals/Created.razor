@@ -1,4 +1,4 @@
-@page "/approvals/created"
+@page "/"
 @using ApplicationOffice.Web.UI.Approvals.Models
 @inject HttpClient _httpClient
 @inject NavigationManager _navigation
@@ -12,37 +12,46 @@
     <p>
         <em>Загрузка заявок...</em>
     </p>
+    <MatProgressBar Indeterminate="true"></MatProgressBar>
+    return;
 }
-else if (!_applications.Any())
+@if (!_applications.Any())
 {
     <p>
         <em>Здесь будут появляться заявки которые вы создали.</em>
     </p>
+    return;
 }
-else
-{
-    <MatTable Items="_applications" class="mat-elevation-z5" OnRowDbClick="OnApplicationClicked"
-              PageLabel="Страница" PageRecordCountLabel="Количество элементов" AllowSelection="true">
-        <MatTableHeader>
-            <th>№</th>
-            <th>Статус</th>
-            <th style="width: 15%">Согласовать до</th>
-            <th>Тип</th>
-            <th>Наименование</th>
-        </MatTableHeader>
-        <MatTableRow>
-            <td>@context.Id</td>
-            <td>
-                <ApplicationStatusLabel Status="@context.Status"/>
-            </td>
+
+<MatTable Items="_applications" class="mat-elevation-z5" OnRowDbClick="OnApplicationClicked"
+          PageLabel="Страница" PageRecordCountLabel="Количество элементов" AllowSelection="true">
+    <MatTableHeader>
+        <th>№</th>
+        <th>Статус</th>
+        <th style="width: 15%">Согласовать до</th>
+        <th>Тип</th>
+        <th>Наименование</th>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>@context.Id</td>
+        <td>
+            <ApplicationStatusLabel Status="@context.Status"/>
+        </td>
+        @if (IsDateExpired(context.DueDate))
+        {
+            <td style="color:red;">@context.DueDate.ToString("dd.MM.yyyy")</td>
+        }
+        else
+        {
             <td>@context.DueDate.ToString("dd.MM.yyyy")</td>
-            <td>
-                <ApplicationTypeLabel Type="@context.Type"/>
-            </td>
-            <td>@context.Title</td>
-        </MatTableRow>
-    </MatTable>
-}
+        }
+        <td>
+            <ApplicationTypeLabel Type="@context.Type"/>
+        </td>
+        <td>@context.Title</td>
+    </MatTableRow>
+</MatTable>
+
 
 @code {
     private ApplicationViewResponse[]? _applications;
@@ -53,7 +62,7 @@ else
             "https://localhost:5003/api/v1/application/created");
     }
 
-    void OnApplicationClicked(object item)
+    private void OnApplicationClicked(object item)
     {
         if (item is ApplicationViewResponse application)
         {
@@ -61,4 +70,5 @@ else
         }
     }
 
+    private static bool IsDateExpired(DateTime date) => DateTime.UtcNow.Date > date.ToUniversalTime().Date;
 }

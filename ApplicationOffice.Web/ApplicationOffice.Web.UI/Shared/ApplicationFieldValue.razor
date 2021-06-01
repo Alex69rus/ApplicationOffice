@@ -1,0 +1,22 @@
+@using System.ComponentModel.DataAnnotations
+@using ApplicationOffice.Web.UI.Approvals.Enums
+
+@if (Type == ApplicationFieldType.DateTime && !string.IsNullOrEmpty(Value))
+{
+    @DateTime.SpecifyKind(DateTime.Parse(Value), DateTimeKind.Utc).ToString("dd.MM.yyyy");
+}
+else
+{
+    @Value
+}
+
+@code {
+
+    [Required]
+    [Parameter]
+    public ApplicationFieldType Type { get; set; }
+
+    [Parameter]
+    public string? Value { get; set; }
+
+}

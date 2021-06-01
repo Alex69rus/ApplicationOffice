@@ -49,7 +49,7 @@ namespace ApplicationOffice.Sso.IdentityServer
                         }
 
                         result = userMgr.AddClaimsAsync(petrov, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "Петров Пётр Петрович"),
+                            new Claim(JwtClaimTypes.Name, "Петров Пётр"),
                             new Claim(JwtClaimTypes.GivenName, "Пётр"),
                             new Claim(JwtClaimTypes.FamilyName, "Петров"),
                             new Claim(AoClaims.UserId, "1"),

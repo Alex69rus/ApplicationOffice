@@ -91,6 +91,14 @@ namespace ApplicationOffice.Approvals.Api.Controllers
                         ApplicationFieldType.Long,
                         "Количество дней",
                         ((request.VacationTo.Date - request.VacationFrom.Date).Days + 1).ToString()),
+                    new ApplicationFieldDto(
+                        ApplicationFieldType.String,
+                        "Комментарий",
+                        request.Description.ToString(CultureInfo.InvariantCulture)),
+                    new ApplicationFieldDto(
+                        ApplicationFieldType.DateTime,
+                        "Дата создания",
+                        DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)),
                 }));
 
             return Ok(applicationId);

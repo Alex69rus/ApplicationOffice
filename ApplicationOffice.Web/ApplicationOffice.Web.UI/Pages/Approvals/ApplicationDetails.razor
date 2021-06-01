@@ -1,13 +1,125 @@
 @page "/approvals/applicationDetails/{applicationId:long}"
-@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@using ApplicationOffice.Web.UI.Approvals.Models
+@using ApplicationOffice.Web.UI.Tools
+@inject HttpClient _httpClient
+@inject NavigationManager _navigation
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject IMatToaster _toaster
+@attribute [Authorize]
 
-<h3>ApplicationDetails</h3>
+@if (_details is null || _approvers is null)
+{
+    <p>
+        <em>Загрузка заявки...</em>
+    </p>
+    <MatProgressBar Indeterminate="true"></MatProgressBar>
 
-<p>@ApplicationId was passed</p>
+    return;
+}
+<div class="mat-layout-grid">
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell">
+            <MatH4>Заявка: @_details.Title</MatH4>
+        </div>
+    </div>
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell">
+            <MatH5>Статус: <ApplicationStatusLabel Status="_details.Status"/></MatH5>
+        </div>
+    </div>
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell">
+            <MatTable Items="_details.Fields" class="mat-elevation-z5" ShowPaging="false" AllowSelection="false">
+                <MatTableHeader>
+                    <th>Согласовать до:</th>
+                    <th>@_details.DueDate.ToString("dd.MM.yyyy")</th>
+                </MatTableHeader>
+                <MatTableRow>
+                    <td>@context.Title</td>
+                    <td>
+                        <ApplicationFieldValue Type="@context.Type" Value="@context.Value"/>
+                    </td>
+                </MatTableRow>
+            </MatTable>
+        </div>
+    </div>
+
+    <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-cell">
+
+            @foreach (var approver in _approvers)
+            {
+                <ApproverCard Name="@approver.User.Name" UserId="@approver.User.Id" Position="@approver.Title" Status="@approver.Status"/>
+            }
+        </div>
+    </div>
+
+    @if (_isApprover)
+    {
+        <div class="mat-layout-grid-inner">
+            <div class="mat-layout-grid-cell">
+                <MatButton Disabled="@_details.Status.IsFinal()" Style="padding: 20px" OnClick="() => Approve()" Raised="true" Icon="check">Согласовать</MatButton>
+                <MatButton Disabled="@_details.Status.IsFinal()" Style="padding: 20px" OnClick="() => Reject()" Raised="true" Icon="close">Отклонить</MatButton>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
 
     [Parameter]
     public long ApplicationId { get; set; }
+
+
+    private FullApplicationApiModel? _details;
+    private ApplicationApproverApiModel[]? _approvers;
+    private bool _isApprover = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _details = await _httpClient.GetFromJsonAsync<FullApplicationApiModel>(
+            $"https://localhost:5003/api/v1/application/{ApplicationId}");
+        _approvers = await _httpClient.GetFromJsonAsync<ApplicationApproverApiModel[]>(
+            $"https://localhost:5003/api/v1/applicationapprover/{ApplicationId}");
+
+        var userId = await GetCurrentUserId();
+        if (userId is not null && _approvers?.Any(x => x.User.Id == userId) == true)
+            _isApprover = true;
+    }
+
+    private async Task<long?> GetCurrentUserId()
+    {
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var userIdStr = authState.User.FindFirst(AoClaimNames.UserId)?.Value;
+
+        if (long.TryParse(userIdStr, out var userId))
+            return userId;
+
+        return null;
+    }
+
+    private async Task Approve()
+    {
+        var resp = await _httpClient.PutAsync(
+            $"https://localhost:5003/api/v1/applicationapprover/{ApplicationId}/approve",
+            default!);
+        var error = await resp.Validate();
+        if (error is null)
+            return;
+
+        _toaster.Add(error.Message, MatToastType.Danger);
+    }
+
+    private async Task Reject()
+    {
+        var resp = await _httpClient.PutAsync(
+            $"https://localhost:5003/api/v1/applicationapprover/{ApplicationId}/reject",
+            default!);
+        var error = await resp.Validate();
+        if (error is null)
+            return;
+
+        _toaster.Add(error.Message, MatToastType.Danger);
+    }
 
 }

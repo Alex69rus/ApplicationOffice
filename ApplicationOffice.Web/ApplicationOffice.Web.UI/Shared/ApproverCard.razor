@@ -1,0 +1,35 @@
+@using System.ComponentModel.DataAnnotations
+@using ApplicationOffice.Web.UI.Approvals.Enums
+
+<div class="ao-user-2l-chip">
+    <img src="@ApproverImg" alt="Person" width="96" height="96">
+    @Name<br/>@Position
+</div>
+
+@code {
+
+    [Required]
+    [Parameter]
+    public long UserId { get; set; }
+
+    [Required]
+    [Parameter]
+    public string Name { get; set; } = default!;
+
+    [Required]
+    [Parameter]
+    public string Position { get; set; } = default!;
+
+    [Required]
+    [Parameter]
+    public ApplicationApproverStatus Status { get; set; }
+
+    private string ApproverImg => Status switch
+    {
+        ApplicationApproverStatus.New => "/Images/blank-avatar.png",
+        ApplicationApproverStatus.Approved => "/Images/Approve.png",
+        ApplicationApproverStatus.Rejected => "/Images/Reject.png",
+
+        _ => throw new ArgumentOutOfRangeException()};
+
+}

@@ -1,8 +1,10 @@
+using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ApplicationOffice.Approvals.Api.Tools;
 using ApplicationOffice.Approvals.Core.Contracts;
 using ApplicationOffice.Approvals.Core.Contracts.Enums;
+using ApplicationOffice.Approvals.Core.Contracts.Models;
 using ApplicationOffice.Common.Api.Cors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -29,6 +31,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpGet("{applicationId}")]
+        [ProducesResponseType(typeof(ApplicationApproverDto), (int) HttpStatusCode.OK)]
         public async Task<IActionResult> GetApplicationApprovers(long applicationId)
         {
             var applicationApprovers = await _service.GetApplicationApprovers(applicationId);
@@ -37,6 +40,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpPut("{applicationId}/approve")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
         public async Task<IActionResult> Approve(long applicationId)
         {
             await _service.MakeDecision(User.GetUserIdOrThrow(), applicationId, ApplicationApproverStatus.Approved);
@@ -45,6 +49,7 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpPut("{applicationId}/reject")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
         public async Task<IActionResult> Reject(long applicationId)
         {
             await _service.MakeDecision(User.GetUserIdOrThrow(), applicationId, ApplicationApproverStatus.Rejected);

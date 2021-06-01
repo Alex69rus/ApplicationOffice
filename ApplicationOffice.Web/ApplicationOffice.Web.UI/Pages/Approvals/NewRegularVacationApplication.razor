@@ -96,7 +96,7 @@ else
         {
             if (Description is null)
                 yield return new ValidationResult("Необходимо заполнить описание");
-            if (VacationFrom.Date <= DateTime.Now.Date)
+            if (VacationFrom.Date <= DateTime.UtcNow.Date)
                 yield return new ValidationResult("Неверная дата начала отпуска");
             if (VacationTo.Date < VacationFrom)
                 yield return new ValidationResult("Неверная дата окончания отпуска");
