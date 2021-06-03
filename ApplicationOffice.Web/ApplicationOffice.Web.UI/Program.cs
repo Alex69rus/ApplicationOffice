@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
+using ApplicationOffice.Web.UI.Configurations;
 using ApplicationOffice.Web.UI.Tools;
 using MatBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -16,13 +17,20 @@ namespace ApplicationOffice.Web.UI
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+
+            var approvalsApiOpts = builder
+                .Configuration
+                .GetSection(nameof(ApprovalsApiOptions))
+                .Get<ApprovalsApiOptions>();
+            builder.Services.AddSingleton(approvalsApiOpts);
+
             builder.Services
                 .AddHttpClient("api")
                 .AddHttpMessageHandler(sp => sp
                     .GetRequiredService<AuthorizationMessageHandler>()
                     .ConfigureHandler(
-                        authorizedUrls: new[] {"https://localhost:5002", "https://localhost:5003"},
-                        scopes: new[] {"approvals"}));
+                        authorizedUrls: new[] {approvalsApiOpts.Address.ToString()},
+                        scopes: new[] {approvalsApiOpts.Scope}));
 
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
 

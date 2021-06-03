@@ -1,10 +1,12 @@
 @page "/approvals/applicationDetails/{applicationId:long}"
 @using ApplicationOffice.Web.UI.Approvals.Models
+@using ApplicationOffice.Web.UI.Configurations
 @using ApplicationOffice.Web.UI.Tools
 @inject HttpClient _httpClient
 @inject NavigationManager _navigation
 @inject AuthenticationStateProvider _authenticationStateProvider
 @inject IMatToaster _toaster
+@inject ApprovalsApiOptions _approvalsApiOptions
 @attribute [Authorize]
 
 @if (_details is null || _approvers is null)
@@ -78,9 +80,9 @@
     protected override async Task OnInitializedAsync()
     {
         _details = await _httpClient.GetFromJsonAsync<FullApplicationApiModel>(
-            $"https://localhost:5003/api/v1/application/{ApplicationId}");
+            new Uri(_approvalsApiOptions.Address, $"api/v1/application/{ApplicationId}"));
         _approvers = await _httpClient.GetFromJsonAsync<ApplicationApproverApiModel[]>(
-            $"https://localhost:5003/api/v1/applicationapprover/{ApplicationId}");
+            new Uri(_approvalsApiOptions.Address, $"api/v1/applicationapprover/{ApplicationId}"));
 
         var userId = await GetCurrentUserId();
         if (userId is not null && _approvers?.Any(x => x.User.Id == userId) == true)
@@ -101,7 +103,7 @@
     private async Task Approve()
     {
         var resp = await _httpClient.PutAsync(
-            $"https://localhost:5003/api/v1/applicationapprover/{ApplicationId}/approve",
+            new Uri(_approvalsApiOptions.Address, "api/v1/applicationapprover/{ApplicationId}/approve"),
             default!);
         var error = await resp.Validate();
         if (error is null)
@@ -113,7 +115,7 @@
     private async Task Reject()
     {
         var resp = await _httpClient.PutAsync(
-            $"https://localhost:5003/api/v1/applicationapprover/{ApplicationId}/reject",
+            new Uri(_approvalsApiOptions.Address, "api/v1/applicationapprover/{ApplicationId}/reject"),
             default!);
         var error = await resp.Validate();
         if (error is null)

@@ -1,7 +1,9 @@
 @page "/"
 @using ApplicationOffice.Web.UI.Approvals.Models
+@using ApplicationOffice.Web.UI.Configurations
 @inject HttpClient _httpClient
 @inject NavigationManager _navigation
+@inject ApprovalsApiOptions _approvalsApiOptions
 @attribute [Authorize]
 
 <MatH4>Ваши созданные заявки</MatH4>
@@ -59,7 +61,7 @@
     protected override async Task OnInitializedAsync()
     {
         _applications = await _httpClient.GetFromJsonAsync<ApplicationViewResponse[]>(
-            "https://localhost:5003/api/v1/application/created");
+            new Uri(_approvalsApiOptions.Address, "api/v1/application/created"));
     }
 
     private void OnApplicationClicked(object item)

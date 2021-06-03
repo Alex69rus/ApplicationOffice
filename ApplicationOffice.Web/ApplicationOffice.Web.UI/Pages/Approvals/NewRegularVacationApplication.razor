@@ -1,10 +1,12 @@
 @page "/approvals/newRegularVacationApplication"
 @using ApplicationOffice.Web.UI.Approvals.Models
 @using System.ComponentModel.DataAnnotations
+@using ApplicationOffice.Web.UI.Configurations
 @using ApplicationOffice.Web.UI.Tools
 @inject HttpClient _httpClient
 @inject NavigationManager _navigation
 @inject IMatToaster _toaster
+@inject ApprovalsApiOptions _approvalsApiOptions
 @attribute [Authorize]
 
 <MatHeadline4>Согласующие</MatHeadline4>
@@ -59,16 +61,18 @@ else
     {
         await base.OnInitializedAsync();
 
-        CurrentUser = await _httpClient.GetFromJsonAsync<FullUserApiModel>("https://localhost:5003/api/v1/user");
+        CurrentUser = await _httpClient.GetFromJsonAsync<FullUserApiModel>(
+            new Uri(_approvalsApiOptions.Address, "api/v1/user"));
 
         if (CurrentUser is not null)
             UnitApprovers = await _httpClient.GetFromJsonAsync<UnitApproverApiModel[]>(
-                $"https://localhost:5003/api/v1/unitapprover/{CurrentUser.UnitId}");
+                new Uri(_approvalsApiOptions.Address, $"api/v1/unitapprover/{CurrentUser.UnitId}"));
     }
 
     private async Task Success()
     {
-        var resp = await _httpClient.PostAsJsonAsync("https://localhost:5003/api/v1/application", NewRequest);
+        var resp = await _httpClient.PostAsJsonAsync(
+            new Uri(_approvalsApiOptions.Address, "api/v1/application"), NewRequest);
         var error = await resp.Validate();
 
         if (error is not null)
