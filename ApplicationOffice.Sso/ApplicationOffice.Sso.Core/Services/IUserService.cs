@@ -18,54 +18,54 @@ namespace ApplicationOffice.Sso.Core.Services
         /// <summary>
         ///     Change user password
         /// </summary>
-        /// <param name="userName">User name</param>
+        /// <param name="userId">User id</param>
         /// <param name="currentPassword">Current user password</param>
         /// <param name="newPassword">New user password</param>
-        Task ChangePassword(string userName, string currentPassword, string newPassword);
+        Task ChangePassword(string userId, string currentPassword, string newPassword);
 
         /// <summary>
         ///     Generate password reset token
         /// </summary>
-        /// <param name="userName">User name for password reset</param>
+        /// <param name="userId">User id for password reset</param>
         /// <returns>Reset token</returns>
-        Task<string> GeneratePasswordResetToken(string userName);
+        Task<string> GeneratePasswordResetToken(string userId);
 
         /// <summary>
         ///     Reset password by token
         /// </summary>
-        /// <param name="userName">User name</param>
+        /// <param name="userId">User id</param>
         /// <param name="resetPassToken">Password reset token</param>
         /// <param name="newPassword">New password</param>
-        Task ResetPassword(string userName, string resetPassToken, string newPassword);
+        Task ResetPassword(string userId, string resetPassToken, string newPassword);
 
         /// <summary>
         ///     Generates phone confirmation token.
         /// </summary>
-        /// <param name="userName">User name.</param>
+        /// <param name="userId">User id.</param>
         /// <returns>Phone confirmation token and its expiration time.</returns>
-        Task<(string token, DateTime tokenExpirationTime)> GenerateConfirmPhoneToken(string userName);
+        Task<(string token, DateTime tokenExpirationTime)> GenerateConfirmPhoneToken(string userId);
 
         /// <summary>
         ///     Confirms user phone.
         /// </summary>
-        /// <param name="userName">User name.</param>
+        /// <param name="userId">User id.</param>
         /// <param name="token">Confirmation token.</param>
         /// <returns>Confirmed phone number.</returns>
-        Task<string> ConfirmPhone(string userName, string token);
+        Task<string> ConfirmPhone(string userId, string token);
 
         /// <summary>
         ///     Generates email confirmation token.
         /// </summary>
-        /// <param name="userName">User name.</param>
+        /// <param name="userId">User id.</param>
         /// <returns>Email confirmation token and its expiration time.</returns>
-        Task<(string token, DateTime tokenExpirationTime)> GenerateConfirmEmailToken(string userName);
+        Task<(string token, DateTime tokenExpirationTime)> GenerateConfirmEmailToken(string userId);
 
         /// <summary>
         ///     Confirms user email.
         /// </summary>
-        /// <param name="userName">User name.</param>
+        /// <param name="userId">User id.</param>
         /// <param name="token">Confirmation token.</param>
         /// <returns>Confirmed email address.</returns>
-        Task<string> ConfirmEmail(string userName, string token);
+        Task<string> ConfirmEmail(string userId, string token);
     }
 }

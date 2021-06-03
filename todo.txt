@@ -2,4 +2,3 @@
 2. Make beauty Swagger
 3. Figure out with User.Id field type. (Will be better string Id) 
 4. Think about ErrorCodes for Exceptions and futher handling them on front-end
-5. Smth with Changing password and creating new Users

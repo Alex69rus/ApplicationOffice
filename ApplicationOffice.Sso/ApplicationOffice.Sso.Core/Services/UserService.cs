@@ -36,12 +36,10 @@ namespace ApplicationOffice.Sso.Core.Services
             if (string.IsNullOrEmpty(request.PhoneNumber) && string.IsNullOrEmpty(request.Email))
                 throw new ValidationException("Phone number and email cannot be both empty.");
 
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(
-                x =>
+            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x =>
                     x.NormalizedUserName == _userManager.NormalizeName(request.UserName) ||
                     request.PhoneNumber != null && x.PhoneNumber == request.PhoneNumber ||
-                    request.Email != null && x.NormalizedEmail == _userManager.NormalizeEmail(request.Email)
-            );
+                    request.Email != null && x.NormalizedEmail == _userManager.NormalizeEmail(request.Email));
             if (existingUser is not null)
                 throw new ValidationException("User already exists");
 
@@ -69,32 +67,32 @@ namespace ApplicationOffice.Sso.Core.Services
             await transaction.CommitAsync();
         }
 
-        public async Task ChangePassword(string userName, string currentPassword, string newPassword)
+        public async Task ChangePassword(string userId, string currentPassword, string newPassword)
         {
-            var user = await GetUserOrThrow(userName);
+            var user = await GetUserOrThrow(userId);
 
             var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
             result.ValidateOrThrow();
         }
 
-        public async Task<string> GeneratePasswordResetToken(string userName)
+        public async Task<string> GeneratePasswordResetToken(string userId)
         {
-            var user = await GetUserOrThrow(userName);
+            var user = await GetUserOrThrow(userId);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             return token;
         }
 
-        public async Task ResetPassword(string userName, string resetPassToken, string newPassword)
+        public async Task ResetPassword(string userId, string resetPassToken, string newPassword)
         {
-            var user = await GetUserOrThrow(userName);
+            var user = await GetUserOrThrow(userId);
             var result = await _userManager.ResetPasswordAsync(user, resetPassToken, newPassword);
             result.ValidateOrThrow();
         }
 
-        public async Task<(string token, DateTime tokenExpirationTime)> GenerateConfirmPhoneToken(string userName)
+        public async Task<(string token, DateTime tokenExpirationTime)> GenerateConfirmPhoneToken(string userId)
         {
-            var user = await GetUserOrThrow(userName);
+            var user = await GetUserOrThrow(userId);
 
             if (string.IsNullOrEmpty(user.PhoneNumber))
                 throw new ValidationException("Phone number is not specified.");
@@ -110,9 +108,9 @@ namespace ApplicationOffice.Sso.Core.Services
             return (token, tokenExpirationTime);
         }
 
-        public async Task<string> ConfirmPhone(string userName, string token)
+        public async Task<string> ConfirmPhone(string userId, string token)
         {
-            var user = await GetUserOrThrow(userName);
+            var user = await GetUserOrThrow(userId);
 
             if (string.IsNullOrEmpty(user.PhoneNumber))
                 throw new ValidationException("Phone number is not specified.");
@@ -127,9 +125,9 @@ namespace ApplicationOffice.Sso.Core.Services
             return user.PhoneNumber;
         }
 
-        public async Task<(string token, DateTime tokenExpirationTime)> GenerateConfirmEmailToken(string userName)
+        public async Task<(string token, DateTime tokenExpirationTime)> GenerateConfirmEmailToken(string userId)
         {
-            var user = await GetUserOrThrow(userName);
+            var user = await GetUserOrThrow(userId);
 
             if (string.IsNullOrEmpty(user.Email))
                 throw new ValidationException("Email is not specified.");
@@ -144,9 +142,9 @@ namespace ApplicationOffice.Sso.Core.Services
             return (token, tokenExpirationTime);
         }
 
-        public async Task<string> ConfirmEmail(string userName, string token)
+        public async Task<string> ConfirmEmail(string userId, string token)
         {
-            var user = await GetUserOrThrow(userName);
+            var user = await GetUserOrThrow(userId);
 
             if (user.EmailConfirmed)
                 throw new ValidationException("Phone number is already confirmed.");
@@ -158,8 +156,8 @@ namespace ApplicationOffice.Sso.Core.Services
             return user.Email;
         }
 
-        private async Task<AoIdentityUser> GetUserOrThrow(string userName) =>
-            await _userManager.FindByNameAsync(userName)
-                ?? throw new ValidationException($"User with name:{userName} not found");
+        private async Task<AoIdentityUser> GetUserOrThrow(string userId) =>
+            await _userManager.FindByIdAsync(userId)
+                ?? throw new ValidationException($"User with id:{userId} not found");
     }
 }

@@ -1,4 +1,4 @@
-﻿using IdentityModel;
+using IdentityModel;
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
@@ -16,18 +16,11 @@ namespace ApplicationOffice.Sso.IdentityServer
 
         public static IEnumerable<ApiScope> ApiScopes => new[]
         {
-            new ApiScope("weatherapi", "Weather API scope."),
             new ApiScope("approvals", "Approvals API scope."),
         };
 
         public static IEnumerable<ApiResource> ApiResources => new[]
         {
-            new ApiResource()
-            {
-                Name = "weatherapi",
-                Description = "The Weather API",
-                Scopes = {"weatherapi"},
-            },
             new ApiResource
             {
                 Name = "approvals",
@@ -45,7 +38,7 @@ namespace ApplicationOffice.Sso.IdentityServer
                 RequirePkce = true,
                 RequireClientSecret = false,
                 AllowedCorsOrigins = { "https://localhost:5001" },
-                AllowedScopes = { "openid", "profile", "email", "weatherapi", "approvals" },
+                AllowedScopes = { "openid", "profile", "email", "approvals" },
                 RedirectUris = { "https://localhost:5001/authentication/login-callback" },
                 PostLogoutRedirectUris = { "https://localhost:5001/" },
                 Enabled = true
@@ -57,7 +50,7 @@ namespace ApplicationOffice.Sso.IdentityServer
     {
         public ProfileWithRoleIdentityResource()
         {
-            this.UserClaims.Add(JwtClaimTypes.Role);
+            UserClaims.Add(JwtClaimTypes.Role);
         }
     }
 }

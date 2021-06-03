@@ -22,7 +22,7 @@ namespace ApplicationOffice.Web.UI
                     .GetRequiredService<AuthorizationMessageHandler>()
                     .ConfigureHandler(
                         authorizedUrls: new[] {"https://localhost:5002", "https://localhost:5003"},
-                        scopes: new[] {"weatherapi", "approvals"}));
+                        scopes: new[] {"approvals"}));
 
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("api"));
 

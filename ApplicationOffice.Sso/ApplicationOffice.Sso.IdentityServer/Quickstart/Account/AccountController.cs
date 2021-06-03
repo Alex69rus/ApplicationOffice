@@ -1,4 +1,5 @@
 ﻿using ApplicationOffice.Sso.Data.Entities;
+using ApplicationOffice.Sso.IdentityServer.Quickstart.Account;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationOffice.Sso.Core.Services;
 
 namespace IdentityServerHost.Quickstart.UI
 {
@@ -27,6 +29,7 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+        private readonly IUserService _userService;
 
         public AccountController(
             UserManager<AoIdentityUser> userManager,
@@ -34,7 +37,8 @@ namespace IdentityServerHost.Quickstart.UI
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events)
+            IEventService events,
+            IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -42,6 +46,7 @@ namespace IdentityServerHost.Quickstart.UI
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+            _userService = userService;
         }
 
         /// <summary>
@@ -77,7 +82,7 @@ namespace IdentityServerHost.Quickstart.UI
             {
                 if (context != null)
                 {
-                    // if the user cancels, send a result back into IdentityServer as if they 
+                    // if the user cancels, send a result back into IdentityServer as if they
                     // denied the consent (even if this client does not require consent).
                     // this will send back an access denied OIDC error response to the client.
                     await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
@@ -145,7 +150,7 @@ namespace IdentityServerHost.Quickstart.UI
             return View(vm);
         }
 
-        
+
         /// <summary>
         /// Show logout page
         /// </summary>
@@ -175,7 +180,7 @@ namespace IdentityServerHost.Quickstart.UI
             // build a model so the logged out page knows what to display
             var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
-            if (User?.Identity.IsAuthenticated == true)
+            if (User.Identity?.IsAuthenticated == true)
             {
                 // delete local authentication cookie
                 await _signInManager.SignOutAsync();
@@ -205,6 +210,34 @@ namespace IdentityServerHost.Quickstart.UI
             return View();
         }
 
+        [HttpGet]
+        public IActionResult ChangePassword(Uri backUrl)
+        {
+            var viewModel = new ChangePasswordViewModel()
+            {
+                BackUrl = backUrl,
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordInputModel model)
+        {
+            if (User.Identity?.IsAuthenticated != true || User.Identity?.GetSubjectId() is null)
+            {
+                Redirect("AccessDenied");
+            }
+
+            await _userService.ChangePassword(User.Identity.GetSubjectId(), model.Password, model.NewPassword);
+            await _signInManager.SignOutAsync();
+            await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+
+            return View("LoggedOut", new LoggedOutViewModel()
+            {
+                PostLogoutRedirectUri = model.BackUrl.ToString(),
+            });
+        }
 
         /*****************************************/
         /* helper APIs for the AccountController */
