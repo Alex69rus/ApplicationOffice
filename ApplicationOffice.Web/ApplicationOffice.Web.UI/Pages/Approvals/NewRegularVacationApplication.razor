@@ -10,47 +10,96 @@
 @inject ApprovalsApiOptions _approvalsApiOptions
 @attribute [Authorize]
 
-<MatH4>Заявка на регулярный отпуск</MatH4>
+<div class="container">
 
-<MatHeadline5>Согласующие:</MatHeadline5>
-@if (UnitApprovers is null)
-{
-    <p>
-        <em>Загрузка согласующих</em>
-    </p>
-    <MatProgressBar Indeterminate="true"/>
-}
-else if (!UnitApprovers.Any())
-{
-    <MatH5>Для вашего отдела не указаны согласующие: обратитесь в техническую поддержку.</MatH5>
-}
-else
-{
-    foreach (var unitApprover in UnitApprovers)
+    <div class="row">
+        <div class="col-md-10">
+            <MatH4>Заявка на регулярный отпуск</MatH4>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-10">
+            <MatHeadline5>Согласующие:</MatHeadline5>
+        </div>
+    </div>
+    @if (UnitApprovers is null)
     {
-        <UserCard UserId="@unitApprover.Approver.Id" Name="@unitApprover.Approver.Name" UnitId="@unitApprover.UnitId" Position="@unitApprover.Title"/>
+        <p>
+            <em>Загрузка согласующих</em>
+        </p>
+        <MatProgressBar Indeterminate="true"/>
     }
-}
+    else if (!UnitApprovers.Any())
+    {
+        <MatH5>Для вашего отдела не указаны согласующие: обратитесь в техническую поддержку.</MatH5>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var unitApprover in UnitApprovers)
+            {
+                <div class="col-md-5">
+                    <UserCard UserId="@unitApprover.Approver.Id" Name="@unitApprover.Approver.Name" UnitId="@unitApprover.UnitId" Position="@unitApprover.Title"/>
+                </div>
+            }
+        </div>
+    }
 
-<MatHeadline5>Укажите информацию:</MatHeadline5>
 
-<EditForm Model="NewRequest" OnValidSubmit="Success">
-    <DataAnnotationsValidator/>
-    <p>
-        <MatDatePicker Label="Дата начала отпуска" @bind-Value="NewRequest.VacationFrom"/>
-    </p>
-    <p>
-        <MatDatePicker Label="Дата окончания отпуска" @bind-Value="NewRequest.VacationTo"/>
-    </p>
-    <p>
-        <MatTextField Label="Описание" @bind-Value="NewRequest.Description" TextArea="true" Dense="true"/>
-    </p>
-    <MatDivider/>
-    <ValidationSummary/>
-    <br/>
-    <MatButton Type="submit" Raised="true" Disabled="@(UnitApprovers?.Any() != true)">Создать</MatButton>
-    <MatButton Raised="true" OnClick="Cancel">Отмена</MatButton>
-</EditForm>
+    <div class="row">
+        <div class="col-md-10">
+            <MatHeadline5>Укажите информацию:</MatHeadline5>
+        </div>
+    </div>
+
+    <EditForm Model="NewRequest" OnValidSubmit="Success">
+        <DataAnnotationsValidator/>
+
+        <div class="row">
+            <div class="col-md-10">
+                <MatDatePicker Label="Дата начала отпуска" @bind-Value="NewRequest.VacationFrom"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10">
+                <MatDatePicker Label="Дата окончания отпуска" @bind-Value="NewRequest.VacationTo"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10">
+                <MatTextField Label="Описание" @bind-Value="NewRequest.Description" TextArea="true" Dense="true"/>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-10">
+                <MatDivider/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10">
+                <ValidationSummary/>
+            </div>
+        </div>
+
+        <br/>
+        <div class="row">
+            <div class="col-md-2">
+                <MatButton Type="submit" Raised="true" Disabled="@(UnitApprovers?.Any() != true)">Создать</MatButton>
+            </div>
+            <div class="col-md-8">
+                <MatButton Raised="true" OnClick="Cancel">Отмена</MatButton>
+            </div>
+        </div>
+    </EditForm>
+
+</div>
 
 @code {
 
