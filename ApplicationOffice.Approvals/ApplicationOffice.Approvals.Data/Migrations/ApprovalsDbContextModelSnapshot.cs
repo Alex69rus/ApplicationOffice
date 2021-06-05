@@ -165,6 +165,9 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
 
+                    b.Property<int>("ApplicationType")
+                        .HasColumnType("int");
+
                     b.Property<long>("ApproverId")
                         .HasColumnType("bigint");
 
@@ -193,6 +196,7 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         new
                         {
                             Id = 1L,
+                            ApplicationType = 1,
                             ApproverId = 1L,
                             CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
@@ -202,6 +206,7 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         new
                         {
                             Id = 2L,
+                            ApplicationType = 1,
                             ApproverId = 2L,
                             CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),

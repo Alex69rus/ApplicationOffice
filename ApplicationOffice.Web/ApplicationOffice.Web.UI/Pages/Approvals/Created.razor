@@ -7,7 +7,12 @@
 @attribute [Authorize]
 
 <MatH4>Ваши созданные заявки</MatH4>
-<MatButton Icon="library_add" OnClick='() => { _navigation.NavigateTo("/approvals/newRegularVacationApplication"); }'>Новая заявка</MatButton>
+<MatButton Icon="library_add" OnClick="@OnMenuClick" RefBack="@_buttonForwardRef">Новая заявка</MatButton>
+<MatMenu @ref="_menu" TargetForwardRef="@_buttonForwardRef">
+    <MatList>
+        <MatListItem OnClick='() => { _navigation.NavigateTo("/approvals/newRegularVacationApplication"); }'>Регулярный отпуск</MatListItem>
+    </MatList>
+</MatMenu>
 
 @if (_applications is null)
 {
@@ -57,6 +62,8 @@
 
 @code {
     private ApplicationViewResponse[]? _applications;
+    private ForwardRef _buttonForwardRef = new();
+    private BaseMatMenu _menu = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,6 +77,11 @@
         {
             _navigation.NavigateTo($"approvals/applicationDetails/{application.Id}");
         }
+    }
+
+    public void OnMenuClick(MouseEventArgs e)
+    {
+        _menu.OpenAsync();
     }
 
     private static bool IsDateExpired(DateTime date) => DateTime.UtcNow.Date > date.ToUniversalTime().Date;

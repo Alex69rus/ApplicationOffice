@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ApplicationOffice.Approvals.Core.Contracts;
+using ApplicationOffice.Approvals.Core.Contracts.Enums;
 using ApplicationOffice.Approvals.Core.Contracts.Models;
 using ApplicationOffice.Common.Api.Cors;
 using Microsoft.AspNetCore.Authorization;
@@ -29,10 +30,10 @@ namespace ApplicationOffice.Approvals.Api.Controllers
         }
 
         [HttpGet("{unitId}")]
-        [ProducesResponseType(typeof(UnitApproverDto[]), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetUnitApprovers(long unitId)
+        [ProducesResponseType(typeof(UnitApproverDto[]), (int) HttpStatusCode.OK)]
+        public async Task<IActionResult> GetUnitApprovers(long unitId, ApplicationType applicationType)
         {
-            var unitApprovers = await _service.GetUnitApprovers(unitId);
+            var unitApprovers = await _service.GetUnitApprovers(unitId, applicationType);
 
             return Ok(unitApprovers);
         }

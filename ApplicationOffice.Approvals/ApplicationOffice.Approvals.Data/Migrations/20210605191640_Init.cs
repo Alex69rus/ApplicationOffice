@@ -80,7 +80,8 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UnitId = table.Column<long>(type: "bigint", nullable: false),
-                    ApproverId = table.Column<long>(type: "bigint", nullable: false)
+                    ApproverId = table.Column<long>(type: "bigint", nullable: false),
+                    ApplicationType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -175,13 +176,13 @@ namespace ApplicationOffice.Approvals.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "unit_approvers",
-                columns: new[] { "Id", "ApproverId", "CreatedAt", "ModifiedAt", "Title", "UnitId" },
-                values: new object[] { 1L, 1L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Руководитель отдела", 1L });
+                columns: new[] { "Id", "ApplicationType", "ApproverId", "CreatedAt", "ModifiedAt", "Title", "UnitId" },
+                values: new object[] { 1L, 1, 1L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Руководитель отдела", 1L });
 
             migrationBuilder.InsertData(
                 table: "unit_approvers",
-                columns: new[] { "Id", "ApproverId", "CreatedAt", "ModifiedAt", "Title", "UnitId" },
-                values: new object[] { 2L, 2L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Отдел кадров", 1L });
+                columns: new[] { "Id", "ApplicationType", "ApproverId", "CreatedAt", "ModifiedAt", "Title", "UnitId" },
+                values: new object[] { 2L, 1, 2L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Отдел кадров", 1L });
 
             migrationBuilder.CreateIndex(
                 name: "IX_application_approvers_ApplicationId",

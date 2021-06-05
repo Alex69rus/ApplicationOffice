@@ -1,6 +1,7 @@
 @page "/approvals/newRegularVacationApplication"
 @using ApplicationOffice.Web.UI.Approvals.Models
 @using System.ComponentModel.DataAnnotations
+@using ApplicationOffice.Web.UI.Approvals.Enums
 @using ApplicationOffice.Web.UI.Configurations
 @using ApplicationOffice.Web.UI.Tools
 @inject HttpClient _httpClient
@@ -9,7 +10,9 @@
 @inject ApprovalsApiOptions _approvalsApiOptions
 @attribute [Authorize]
 
-<MatHeadline4>Согласующие</MatHeadline4>
+<MatH4>Заявка на регулярный отпуск</MatH4>
+
+<MatHeadline5>Согласующие:</MatHeadline5>
 @if (UnitApprovers is null)
 {
     <p>
@@ -19,7 +22,7 @@
 }
 else if (!UnitApprovers.Any())
 {
-    <MatH5>Для вашего отдела не указаны согласующие.</MatH5>
+    <MatH5>Для вашего отдела не указаны согласующие: обратитесь в техническую поддержку.</MatH5>
 }
 else
 {
@@ -29,11 +32,10 @@ else
     }
 }
 
-<MatH5>Заявка на регулярный отпуск:</MatH5>
+<MatHeadline5>Укажите информацию:</MatHeadline5>
 
 <EditForm Model="NewRequest" OnValidSubmit="Success">
     <DataAnnotationsValidator/>
-
     <p>
         <MatDatePicker Label="Дата начала отпуска" @bind-Value="NewRequest.VacationFrom"/>
     </p>
@@ -46,12 +48,13 @@ else
     <MatDivider/>
     <ValidationSummary/>
     <br/>
-    <MatButton Type="submit" Raised="true">Создать</MatButton>
+    <MatButton Type="submit" Raised="true" Disabled="@(UnitApprovers?.Any() != true)">Создать</MatButton>
     <MatButton Raised="true" OnClick="Cancel">Отмена</MatButton>
 </EditForm>
 
 @code {
 
+        private const ApplicationType ApplicationType = UI.Approvals.Enums.ApplicationType.RegularVacation;
     private UnitApproverApiModel[]? UnitApprovers { get; set; }
     private FullUserApiModel? CurrentUser { get; set; }
 
@@ -66,7 +69,9 @@ else
 
         if (CurrentUser is not null)
             UnitApprovers = await _httpClient.GetFromJsonAsync<UnitApproverApiModel[]>(
-                new Uri(_approvalsApiOptions.Address, $"api/v1/unitapprover/{CurrentUser.UnitId}"));
+                new Uri(
+                    _approvalsApiOptions.Address,
+                    $"api/v1/unitapprover/{CurrentUser.UnitId}?applicationType={ApplicationType}"));
     }
 
     private async Task Success()
@@ -93,16 +98,20 @@ else
     public class CreateRegularVacationApplicationCommand : IValidatableObject
     {
         public string? Description { get; set; }
-        public DateTime VacationFrom { get; set; }
-        public DateTime VacationTo { get; set; }
+        public DateTime? VacationFrom { get; set; }
+        public DateTime? VacationTo { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Description is null)
                 yield return new ValidationResult("Необходимо заполнить описание");
-            if (VacationFrom.Date <= DateTime.UtcNow.Date)
+            if (!VacationFrom.HasValue)
+                yield return new ValidationResult("Необходимо указать дату начала отпуска");
+            if (VacationFrom.HasValue && VacationFrom.Value.Date <= DateTime.UtcNow.Date)
                 yield return new ValidationResult("Неверная дата начала отпуска");
-            if (VacationTo.Date < VacationFrom)
+            if (!VacationTo.HasValue)
+                yield return new ValidationResult("Необходимо указать дату окончания отпуска");
+            if (VacationTo.HasValue && VacationTo.Value.Date < VacationFrom)
                 yield return new ValidationResult("Неверная дата окончания отпуска");
         }
     }

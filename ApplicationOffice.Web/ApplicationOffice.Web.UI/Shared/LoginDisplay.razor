@@ -8,7 +8,6 @@
 <AuthorizeView>
     <Authorized>
         Здавствуйте, @context.User.Identity?.Name!
-        @* <MatButton Icon="settings" OnClick="@BeginSignOut"/> *@
         <MatButton Icon="settings" OnClick="@OnClick" RefBack="@_buttonForwardRef"></MatButton>
         <MatMenu @ref="_menu" TargetForwardRef="@_buttonForwardRef">
             <MatList>
@@ -16,11 +15,9 @@
             </MatList>
         </MatMenu>
         <MatButton OnClick="@BeginSignOut" Label="Выход"/>
-        @* <button class="nav-link btn btn-link" @onclick="BeginSignOut">Выход</button> *@
     </Authorized>
     <NotAuthorized>
         <MatButtonLink Href="authentication/login">Войти</MatButtonLink>
-        @* <a href="authentication/login">Войти</a> *@
     </NotAuthorized>
 </AuthorizeView>
 

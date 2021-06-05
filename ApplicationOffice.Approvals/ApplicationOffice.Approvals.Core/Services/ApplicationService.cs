@@ -77,7 +77,7 @@ namespace ApplicationOffice.Approvals.Core.Services
                 throw new BadRequestException("User is not in a Unit");
 
             var unitApprovers = await _dbContext.UnitApprovers
-                .Where(x => x.UnitId == author.UnitId)
+                .Where(x => x.UnitId == author.UnitId && x.ApplicationType == (ApplicationType) request.Type)
                 .ToArrayAsync();
             if (!unitApprovers.Any())
                 throw new BadRequestException("Unit doesn't have configured approvers");

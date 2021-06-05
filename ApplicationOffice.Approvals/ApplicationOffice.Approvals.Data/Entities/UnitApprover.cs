@@ -1,4 +1,5 @@
 using System;
+using ApplicationOffice.Approvals.Data.Enums;
 
 namespace ApplicationOffice.Approvals.Data.Entities
 {
@@ -13,22 +14,31 @@ namespace ApplicationOffice.Approvals.Data.Entities
         public Unit Unit { get; protected set; } = default!;
         public long ApproverId { get; protected set; }
         public User Approver { get; protected set; } = default!;
+        public ApplicationType ApplicationType { get; protected set; }
 
-        internal UnitApprover(long id, DateTime createdAt, string title, long unitId, long approverId)
+        internal UnitApprover(
+            long id,
+            DateTime createdAt,
+            string title,
+            long unitId,
+            long approverId,
+            ApplicationType applicationType)
         {
             Id = id;
             CreatedAt = ModifiedAt = createdAt;
             Title = title;
             UnitId = unitId;
             ApproverId = approverId;
+            ApplicationType = applicationType;
         }
 
-        public UnitApprover(string title, long unitId, long approverId)
+        public UnitApprover(string title, long unitId, long approverId, ApplicationType applicationType)
         {
             CreatedAt = ModifiedAt = DateTime.UtcNow;
             Title = title;
             UnitId = unitId;
             ApproverId = approverId;
+            ApplicationType = applicationType;
         }
     }
 }
