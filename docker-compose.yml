@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+
+  web-ui:
+    image: web-ui
+    container_name: web-ui
+    build:
+      context: ApplicationOffice.Web
+      dockerfile: ApplicationOffice.Web.UI/Dockerfile
+    ports:
+      - 5001:443
+
+  approvals-api:
+    image: approvals-api
+    container_name: approvals-api
+    build:
+      context: .
+      dockerfile: ApplicationOffice.Approvals/ApplicationOffice.Approvals.Api/Dockerfile
+    ports:
+      - 5003:5003
+
+  identity-server-api:
+    image: identity-server-api
+    container_name: identity-server-api
+    build:
+      context: .
+      dockerfile: ApplicationOffice.Sso/ApplicationOffice.Sso.IdentityServer/Dockerfile
+    ports:
+      - 5000:5000
+
+    # Add ms-sql server
+  

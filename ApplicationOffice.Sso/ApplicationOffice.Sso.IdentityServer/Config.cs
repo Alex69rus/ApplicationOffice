@@ -37,10 +37,10 @@ namespace ApplicationOffice.Sso.IdentityServer
                 AllowedGrantTypes = GrantTypes.Code,
                 RequirePkce = true,
                 RequireClientSecret = false,
-                AllowedCorsOrigins = { "https://localhost:5001" },
+                AllowedCorsOrigins = { "https://localhost:5001", "http://localhost:5001" },
                 AllowedScopes = { "openid", "profile", "email", "approvals" },
-                RedirectUris = { "https://localhost:5001/authentication/login-callback" },
-                PostLogoutRedirectUris = { "https://localhost:5001/" },
+                RedirectUris = { "https://localhost:5001/authentication/login-callback", "http://localhost:5001/authentication/login-callback" },
+                PostLogoutRedirectUris = { "https://localhost:5001/", "http://localhost:5001/" },
                 Enabled = true
             },
         };

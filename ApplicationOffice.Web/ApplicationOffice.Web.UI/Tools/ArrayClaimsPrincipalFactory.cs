@@ -20,7 +20,7 @@ namespace ApplicationOffice.Web.UI.Tools
         {
             var user = await base.CreateUserAsync(account, options);
 
-            var claimsIdentity = (ClaimsIdentity)user.Identity;
+            var claimsIdentity = (ClaimsIdentity)user.Identity!;
 
             if (account != null)
             {
@@ -32,7 +32,7 @@ namespace ApplicationOffice.Web.UI.Tools
                     {
                         claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(kvp.Key));
 
-                        var claims = element.EnumerateArray().Select(x => new Claim(kvp.Key, x.ToString()));
+                        var claims = element.EnumerateArray().Select(x => new Claim(kvp.Key, x.ToString()!));
 
                         claimsIdentity.AddClaims(claims);
                     }
