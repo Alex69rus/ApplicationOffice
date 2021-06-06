@@ -4,3 +4,4 @@
 4. Think about ErrorCodes for Exceptions and futher handling them on front-end
 
 5. New view for application card
+!6. User details by clicking on user card
