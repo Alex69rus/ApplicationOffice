@@ -1,7 +1,6 @@
 @model ApplicationOffice.Sso.IdentityServer.Controllers.Account.LoginViewModel
 
 <div class="login-page">
-    <partial name="_ValidationSummary" />
     <div class="row">
 
         @if (Model.EnableLocalLogin)
@@ -13,6 +12,7 @@
                     </div>
 
                     <div class="card-body">
+                        <partial name="_ValidationSummary" />
                         <form asp-route="Login">
                             <input type="hidden" asp-for="ReturnUrl" />
 

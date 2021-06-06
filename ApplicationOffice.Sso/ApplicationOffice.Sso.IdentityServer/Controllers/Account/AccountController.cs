@@ -139,7 +139,7 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Account
                     }
                 }
 
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
+                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
 
@@ -222,18 +222,26 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Account
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordInputModel model)
         {
-            if (User.Identity?.IsAuthenticated != true || User.Identity?.GetSubjectId() is null)
+            if (ModelState.IsValid)
             {
-                Redirect("AccessDenied");
+                if (User.Identity?.IsAuthenticated != true || User.Identity?.GetSubjectId() is null)
+                {
+                    Redirect("AccessDenied");
+                }
+
+                await _userService.ChangePassword(User.Identity.GetSubjectId(), model.Password, model.NewPassword);
+                await _signInManager.SignOutAsync();
+                await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+
+                return View("LoggedOut", new LoggedOutViewModel()
+                {
+                    PostLogoutRedirectUri = model.BackUrl?.ToString()!,
+                });
             }
 
-            await _userService.ChangePassword(User.Identity.GetSubjectId(), model.Password, model.NewPassword);
-            await _signInManager.SignOutAsync();
-            await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
-
-            return View("LoggedOut", new LoggedOutViewModel()
+            return View(new ChangePasswordViewModel
             {
-                PostLogoutRedirectUri = model.BackUrl?.ToString()!,
+                BackUrl = model.BackUrl,
             });
         }
 
