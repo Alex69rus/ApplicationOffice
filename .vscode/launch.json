@@ -46,6 +46,9 @@
             "request": "launch",
             "cwd": "${workspaceFolder}/ApplicationOffice.Web/ApplicationOffice.Web.UI",
             "preLaunchTask": "Build:ApplicationOffice.Web",
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
         },
     ],
     "compounds": [

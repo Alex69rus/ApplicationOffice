@@ -6,4 +6,5 @@ RUN dotnet publish ApplicationOffice.Sso/ApplicationOffice.Sso.IdentityServer/Ap
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim
 WORKDIR /app
 COPY --from=build /app .
+COPY localhost.pfx /app/localhost.pfx
 ENTRYPOINT ["dotnet", "ApplicationOffice.Sso.IdentityServer.dll"]

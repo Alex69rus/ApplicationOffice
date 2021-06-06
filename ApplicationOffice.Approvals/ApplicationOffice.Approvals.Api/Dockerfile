@@ -6,4 +6,5 @@ RUN dotnet publish ApplicationOffice.Approvals/ApplicationOffice.Approvals.Api/A
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=build /app .
+COPY localhost.pfx /app/localhost.pfx
 ENTRYPOINT ["dotnet", "ApplicationOffice.Approvals.Api.dll"]

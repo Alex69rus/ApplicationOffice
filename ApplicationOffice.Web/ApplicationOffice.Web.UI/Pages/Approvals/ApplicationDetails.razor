@@ -2,6 +2,7 @@
 @using ApplicationOffice.Web.UI.Approvals.Models
 @using ApplicationOffice.Web.UI.Configurations
 @using ApplicationOffice.Web.UI.Tools
+@using ApplicationOffice.Web.UI.Approvals.Enums
 @inject HttpClient _httpClient
 @inject NavigationManager _navigation
 @inject AuthenticationStateProvider _authenticationStateProvider
@@ -12,7 +13,7 @@
 @if (_details is null || _approvers is null)
 {
     <p>
-        <em>Загрузка заявки...</em>
+        <em>Загрузка заявления...</em>
     </p>
     <MatProgressBar Indeterminate="true"></MatProgressBar>
 
@@ -21,7 +22,7 @@
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
         <div class="mat-layout-grid-cell">
-            <MatH4>Заявка: @_details.Title</MatH4>
+            <MatH4>Заявление: @_details.Title</MatH4>
         </div>
     </div>
     <div class="mat-layout-grid-inner">
@@ -80,12 +81,13 @@
     protected override async Task OnInitializedAsync()
     {
         _details = await _httpClient.GetFromJsonAsync<FullApplicationApiModel>(
-            new Uri(_approvalsApiOptions.Address, $"api/v1/application/{ApplicationId}"));
+        new Uri(_approvalsApiOptions.Address, $"api/v1/application/{ApplicationId}"));
         _approvers = await _httpClient.GetFromJsonAsync<ApplicationApproverApiModel[]>(
-            new Uri(_approvalsApiOptions.Address, $"api/v1/applicationapprover/{ApplicationId}"));
+        new Uri(_approvalsApiOptions.Address, $"api/v1/applicationapprover/{ApplicationId}"));
 
         var userId = await GetCurrentUserId();
-        if (userId is not null && _approvers?.Any(x => x.User.Id == userId) == true)
+        if (userId is not null 
+            && _approvers?.Any(x => x.User.Id == userId && x.Status == ApplicationApproverStatus.New) == true)
             _isApprover = true;
     }
 
@@ -103,25 +105,34 @@
     private async Task Approve()
     {
         var resp = await _httpClient.PutAsync(
-            new Uri(_approvalsApiOptions.Address, "api/v1/applicationapprover/{ApplicationId}/approve"),
+            new Uri(_approvalsApiOptions.Address, $"api/v1/applicationapprover/{ApplicationId}/approve"),
             default!);
         var error = await resp.Validate();
-        if (error is null)
+        if (error is not null)
+        {
+            _toaster.Add(error.Message, MatToastType.Danger);
             return;
+        }
 
-        _toaster.Add(error.Message, MatToastType.Danger);
+        _toaster.Add("Заявление было согласовано", MatToastType.Success);
+        _navigation.NavigateTo(_navigation.BaseUri);
+
     }
 
     private async Task Reject()
     {
         var resp = await _httpClient.PutAsync(
-            new Uri(_approvalsApiOptions.Address, "api/v1/applicationapprover/{ApplicationId}/reject"),
+            new Uri(_approvalsApiOptions.Address, $"api/v1/applicationapprover/{ApplicationId}/reject"),
             default!);
         var error = await resp.Validate();
-        if (error is null)
+        if (error is not null)
+        {
+            _toaster.Add(error.Message, MatToastType.Danger);
             return;
+        }
 
-        _toaster.Add(error.Message, MatToastType.Danger);
+        _toaster.Add("Заявление было отклонено", MatToastType.Success);
+        _navigation.NavigateTo(_navigation.BaseUri);
     }
 
 }

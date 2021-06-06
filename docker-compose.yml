@@ -4,30 +4,47 @@ services:
 
   web-ui:
     image: web-ui
+    hostname: web-ui
     container_name: web-ui
     build:
-      context: ApplicationOffice.Web
-      dockerfile: ApplicationOffice.Web.UI/Dockerfile
+      context: .
+      dockerfile: ApplicationOffice.Web/ApplicationOffice.Web.UI/Dockerfile
     ports:
       - 5001:443
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
 
   approvals-api:
     image: approvals-api
+    hostname: approvals-api
     container_name: approvals-api
     build:
       context: .
       dockerfile: ApplicationOffice.Approvals/ApplicationOffice.Approvals.Api/Dockerfile
-    ports:
-      - 5003:5003
+    # ports:
+    #   - 5003:5003
+    network_mode: host
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "https://localhost:5003"
+      Kestrel__Certificates__Default__Path: "/app/localhost.pfx"
+      Kestrel__Certificates__Default__Password: ""
 
   identity-server-api:
     image: identity-server-api
+    hostname: identity-server-api
     container_name: identity-server-api
     build:
       context: .
       dockerfile: ApplicationOffice.Sso/ApplicationOffice.Sso.IdentityServer/Dockerfile
-    ports:
-      - 5000:5000
+    # ports:
+    #   - 5000:5000
+    network_mode: host
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: "https://localhost:5000"
+      Kestrel__Certificates__Default__Path: "/app/localhost.pfx"
+      Kestrel__Certificates__Default__Password: ""
 
     # Add ms-sql server
   

@@ -6,12 +6,12 @@
 @inject ApprovalsApiOptions _approvalsApiOptions
 @attribute [Authorize]
 
-<h1>Заявки на согласовании</h1>
+<h1>Заявления на согласовании</h1>
 
 @if (_applications == null)
 {
     <p>
-        <em>Загрузка заявок...</em>
+        <em>Загрузка заявлений...</em>
     </p>
     <MatProgressBar Indeterminate="true"></MatProgressBar>
     return;
@@ -19,7 +19,7 @@
 @if (!_applications.Any())
 {
     <p>
-        <em>Здесь будут появляться заявки которые вам необходимо согласовать.</em>
+        <em>Здесь будут появляться заявления которые вам необходимо согласовать.</em>
     </p>
     return;
 }
@@ -60,7 +60,7 @@
     protected override async Task OnInitializedAsync()
     {
         _applications = await _httpClient.GetFromJsonAsync<ApplicationViewResponse[]>(
-            new Uri(_approvalsApiOptions.Address, "api/v1/application/onapproval"));
+            new Uri(_approvalsApiOptions.Address, "api/v1/application/onapproval?approverStatuses=New"));
     }
 
     private void OnApplicationClicked(object item)

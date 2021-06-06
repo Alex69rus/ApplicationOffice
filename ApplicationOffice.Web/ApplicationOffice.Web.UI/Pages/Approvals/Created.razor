@@ -6,8 +6,8 @@
 @inject ApprovalsApiOptions _approvalsApiOptions
 @attribute [Authorize]
 
-<MatH4>Ваши созданные заявки</MatH4>
-<MatButton Icon="library_add" OnClick="@OnMenuClick" RefBack="@_buttonForwardRef">Новая заявка</MatButton>
+<MatH4>Ваши созданные заявления</MatH4>
+<MatButton Icon="library_add" OnClick="@OnMenuClick" RefBack="@_buttonForwardRef">Новое заявление</MatButton>
 <MatMenu @ref="_menu" TargetForwardRef="@_buttonForwardRef">
     <MatList>
         <MatListItem OnClick='() => { _navigation.NavigateTo("/approvals/newRegularVacationApplication"); }'>Регулярный отпуск</MatListItem>
@@ -17,7 +17,7 @@
 @if (_applications is null)
 {
     <p>
-        <em>Загрузка заявок...</em>
+        <em>Загрузка заявлений...</em>
     </p>
     <MatProgressBar Indeterminate="true"></MatProgressBar>
     return;
@@ -25,7 +25,7 @@
 @if (!_applications.Any())
 {
     <p>
-        <em>Здесь будут появляться заявки которые вы создали.</em>
+        <em>Здесь будут появляться заявления которые вы создали.</em>
     </p>
     return;
 }
