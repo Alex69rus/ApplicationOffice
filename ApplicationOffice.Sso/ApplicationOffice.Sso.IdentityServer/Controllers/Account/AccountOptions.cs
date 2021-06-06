@@ -11,6 +11,6 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Account
         public static bool ShowLogoutPrompt = true;
         public static bool AutomaticRedirectAfterSignOut = false;
 
-        public static string InvalidCredentialsErrorMessage = "Invalid username or password";
+        public static string InvalidCredentialsErrorMessage = "Неверное имя пользователя или пароль";
     }
 }
