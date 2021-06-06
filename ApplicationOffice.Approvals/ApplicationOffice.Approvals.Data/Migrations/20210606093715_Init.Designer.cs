@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApplicationOffice.Approvals.Data.Migrations
 {
     [DbContext(typeof(ApprovalsDbContext))]
-    [Migration("20210605191640_Init")]
+    [Migration("20210606093715_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,8 +224,15 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
 
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
@@ -247,7 +254,9 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         new
                         {
                             Id = 1L,
+                            BirthDate = new DateTime(1970, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "PP.Petrov@mail.ru",
                             ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Петров Пётр Петрович",
                             UnitId = 1L
@@ -255,7 +264,9 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         new
                         {
                             Id = 2L,
+                            BirthDate = new DateTime(1987, 2, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "II.Ivanov@mail.ru",
                             ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Иванов Иван Иванович",
                             UnitId = 1L
@@ -263,7 +274,9 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                         new
                         {
                             Id = 3L,
+                            BirthDate = new DateTime(1990, 9, 27, 0, 0, 0, 0, DateTimeKind.Utc),
                             CreatedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "AA.Alexeev@mail.ru",
                             ModifiedAt = new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Name = "Алексеев Алексей Алексеевич",
                             UnitId = 1L

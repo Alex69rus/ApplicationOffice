@@ -31,7 +31,9 @@ namespace ApplicationOffice.Approvals.Data.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UnitId = table.Column<long>(type: "bigint", nullable: true)
+                    UnitId = table.Column<long>(type: "bigint", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -161,18 +163,18 @@ namespace ApplicationOffice.Approvals.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "users",
-                columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Name", "UnitId" },
-                values: new object[] { 1L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Петров Пётр Петрович", 1L });
+                columns: new[] { "Id", "BirthDate", "CreatedAt", "Email", "ModifiedAt", "Name", "UnitId" },
+                values: new object[] { 1L, new DateTime(1970, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "PP.Petrov@mail.ru", new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Петров Пётр Петрович", 1L });
 
             migrationBuilder.InsertData(
                 table: "users",
-                columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Name", "UnitId" },
-                values: new object[] { 2L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Иванов Иван Иванович", 1L });
+                columns: new[] { "Id", "BirthDate", "CreatedAt", "Email", "ModifiedAt", "Name", "UnitId" },
+                values: new object[] { 2L, new DateTime(1987, 2, 10, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "II.Ivanov@mail.ru", new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Иванов Иван Иванович", 1L });
 
             migrationBuilder.InsertData(
                 table: "users",
-                columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Name", "UnitId" },
-                values: new object[] { 3L, new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Алексеев Алексей Алексеевич", 1L });
+                columns: new[] { "Id", "BirthDate", "CreatedAt", "Email", "ModifiedAt", "Name", "UnitId" },
+                values: new object[] { 3L, new DateTime(1990, 9, 27, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "AA.Alexeev@mail.ru", new DateTime(2021, 5, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Алексеев Алексей Алексеевич", 1L });
 
             migrationBuilder.InsertData(
                 table: "unit_approvers",
