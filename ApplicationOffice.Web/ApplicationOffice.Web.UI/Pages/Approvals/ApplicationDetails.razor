@@ -19,49 +19,62 @@
 
     return;
 }
-<div class="mat-layout-grid">
-    <div class="mat-layout-grid-inner">
-        <div class="mat-layout-grid-cell">
+
+<div class="container float-left">
+    <div class="row">
+        <div class="col-md-10">
             <MatH4>Заявление: @_details.Title</MatH4>
         </div>
     </div>
-    <div class="mat-layout-grid-inner">
-        <div class="mat-layout-grid-cell">
+    <div class="row">
+        <div class="col-md-10">
             <MatH5>Статус: <ApplicationStatusLabel Status="_details.Status"/></MatH5>
         </div>
     </div>
-    <div class="mat-layout-grid-inner">
-        <div class="mat-layout-grid-cell">
-            <MatTable Items="_details.Fields" class="mat-elevation-z5" ShowPaging="false" AllowSelection="false">
-                <MatTableHeader>
-                    <th>Согласовать до:</th>
-                    <th>@_details.DueDate.ToString("dd.MM.yyyy")</th>
-                </MatTableHeader>
-                <MatTableRow>
-                    <td>@context.Title</td>
-                    <td>
-                        <ApplicationFieldValue Type="@context.Type" Value="@context.Value"/>
-                    </td>
-                </MatTableRow>
-            </MatTable>
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-hover">
+                <colgroup>
+                    <col class="col-md-3">
+                    <col class="col-md-7">
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td>Согласовать до</td>
+                    <td>@_details.DueDate.ToString("dd.MM.yyyy")</td>
+                </tr>
+                @foreach (var field in _details.Fields)
+                {
+                    <tr>
+                        <td>@field.Title</td>
+                        <td>
+                            <ApplicationFieldValue Type="@field.Type" Value="@field.Value"/>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div class="mat-layout-grid-inner">
-        <div class="mat-layout-grid-cell">
+    <div class="row">
 
-            @foreach (var approver in _approvers)
-            {
+        @foreach (var approver in _approvers)
+        {
+            <div class="col-md-5">
                 <ApproverCard Name="@approver.User.Name" UserId="@approver.User.Id" Position="@approver.Title" Status="@approver.Status"/>
-            }
-        </div>
+            </div>
+        }
     </div>
 
     @if (_isApprover)
     {
-        <div class="mat-layout-grid-inner">
-            <div class="mat-layout-grid-cell">
+        <br/>
+        <div class="row">
+            <div class="col-md-2">
                 <MatButton Disabled="@_details.Status.IsFinal()" Style="padding: 20px" OnClick="() => Approve()" Raised="true" Icon="check">Согласовать</MatButton>
+            </div>
+            <div class="col-md-8">
                 <MatButton Disabled="@_details.Status.IsFinal()" Style="padding: 20px" OnClick="() => Reject()" Raised="true" Icon="close">Отклонить</MatButton>
             </div>
         </div>
@@ -81,12 +94,12 @@
     protected override async Task OnInitializedAsync()
     {
         _details = await _httpClient.GetFromJsonAsync<FullApplicationApiModel>(
-        new Uri(_approvalsApiOptions.Address, $"api/v1/application/{ApplicationId}"));
+            new Uri(_approvalsApiOptions.Address, $"api/v1/application/{ApplicationId}"));
         _approvers = await _httpClient.GetFromJsonAsync<ApplicationApproverApiModel[]>(
-        new Uri(_approvalsApiOptions.Address, $"api/v1/applicationapprover/{ApplicationId}"));
+            new Uri(_approvalsApiOptions.Address, $"api/v1/applicationapprover/{ApplicationId}"));
 
         var userId = await GetCurrentUserId();
-        if (userId is not null 
+        if (userId is not null
             && _approvers?.Any(x => x.User.Id == userId && x.Status == ApplicationApproverStatus.New) == true)
             _isApprover = true;
     }
@@ -116,7 +129,6 @@
 
         _toaster.Add("Заявление было согласовано", MatToastType.Success);
         _navigation.NavigateTo(_navigation.BaseUri);
-
     }
 
     private async Task Reject()
