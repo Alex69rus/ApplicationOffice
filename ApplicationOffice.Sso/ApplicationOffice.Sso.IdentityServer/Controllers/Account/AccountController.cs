@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationOffice.Common.Core.Exceptions;
+using ApplicationOffice.Sso.Core.Constants;
 using ApplicationOffice.Sso.Core.Services;
 using ApplicationOffice.Sso.Data.Entities;
 using IdentityModel;
@@ -220,8 +222,17 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Account
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(ChangePasswordInputModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordInputModel model, string button)
         {
+            if (button != "change")
+            {
+                if (model.BackUrl is not null)
+                    return Redirect(model.BackUrl.ToString());
+                else
+                    return Redirect("~/");
+            }
+
             if (ModelState.IsValid)
             {
                 if (User.Identity?.IsAuthenticated != true || User.Identity?.GetSubjectId() is null)
@@ -229,14 +240,38 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Account
                     Redirect("AccessDenied");
                 }
 
-                await _userService.ChangePassword(User.Identity.GetSubjectId(), model.Password, model.NewPassword);
-                await _signInManager.SignOutAsync();
-                await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
-
-                return View("LoggedOut", new LoggedOutViewModel()
+                try
                 {
-                    PostLogoutRedirectUri = model.BackUrl?.ToString()!,
-                });
+                    await _userService.ChangePassword(User.Identity.GetSubjectId(), model.Password, model.NewPassword);
+                    await _signInManager.SignOutAsync();
+                    await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+
+                    return View("LoggedOut", new LoggedOutViewModel()
+                    {
+                        PostLogoutRedirectUri = model.BackUrl?.ToString()!,
+                    });
+                }
+                catch (AoException ex)
+                {
+                    // TODO: use localization
+                    var message = ex.ErrorCode switch
+                    {
+                        SsoErrorCodes.InvalidPassword => "Неверный пароль",
+                        SsoErrorCodes.PasswordTooLong => "Слишком длинный пароль",
+                        SsoErrorCodes.PasswordTooShort => "Слишком короткий пароль",
+                        SsoErrorCodes.PasswordRequiresDigit => "В пароле должна присутствовать хотя бы одна цифра",
+                        SsoErrorCodes.PasswordRequiresNonAlphanumeric 
+                            => "В пароле должна присутствовать хотя бы один символ",
+                        SsoErrorCodes.PasswordRequiresUpper 
+                            => "В пароле должна присутствовать хотя бы одна заглавная буква",
+                        SsoErrorCodes.PasswordRequiresLower 
+                            => "В пароле должна присутствовать хотя бы одна прописная буква",
+
+                        _ => "Введены не корректные данные"
+                    };
+
+                    ModelState.AddModelError("error", message);
+                }
             }
 
             return View(new ChangePasswordViewModel

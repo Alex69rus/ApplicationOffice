@@ -1,4 +1,5 @@
 using System.Linq;
+using ApplicationOffice.Common.Core.Constants;
 using ApplicationOffice.Common.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -22,7 +23,7 @@ namespace ApplicationOffice.Common.Api.Validations
                         .SelectMany(node => node.Errors)
                         .Select(error => error.ErrorMessage));
 
-                throw new BadRequestException(additionalInfo);
+                throw new BadRequestException(additionalInfo, DefaultErrorCodes.BadRequest);
             }
         }
 

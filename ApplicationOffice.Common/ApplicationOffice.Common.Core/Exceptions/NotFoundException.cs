@@ -2,14 +2,12 @@ using System;
 
 namespace ApplicationOffice.Common.Core.Exceptions
 {
-    [Serializable]
-    public class NotFoundException : Exception
+    public class NotFoundException : AoException
     {
-        public NotFoundException() { }
-        public NotFoundException(string message) : base(message) { }
-        public NotFoundException(string message, Exception inner) : base(message, inner) { }
-        protected NotFoundException(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        public NotFoundException(string message, int errorCode)
+            : base(message, errorCode) { }
+
+        public NotFoundException(string message, int errorCode, Exception inner)
+            : base(message, errorCode, inner) { }
     }
 }

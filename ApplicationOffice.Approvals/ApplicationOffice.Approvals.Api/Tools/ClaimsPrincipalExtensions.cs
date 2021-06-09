@@ -8,17 +8,19 @@ namespace ApplicationOffice.Approvals.Api.Tools
     {
         public static long GetUserIdOrThrow(this ClaimsPrincipal claims)
         {
-            var value = claims.FindFirstValue(AoClaims.UserId) ?? throw new UnauthorizedException();
+            var value = claims.FindFirstValue(AoClaims.UserId)
+                ?? throw new UnauthorizedException("Unauthorized access", DefaultErrorCodes.Unauthorized);
 
             if (!long.TryParse(value, out var userId))
-                throw new UnauthorizedException();
+                throw new UnauthorizedException("Unauthorized access", DefaultErrorCodes.Unauthorized);
 
             return userId;
         }
 
         public static string GetNameOrThrow(this ClaimsPrincipal claims)
         {
-            return claims.FindFirstValue(AoClaims.UserName) ?? throw new UnauthorizedException();
+            return claims.FindFirstValue(AoClaims.UserName)
+                ?? throw new UnauthorizedException("Unauthorized access", DefaultErrorCodes.Unauthorized);
         }
     }
 }

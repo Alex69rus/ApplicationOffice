@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationOffice.Approvals.Core.Constants;
 using ApplicationOffice.Approvals.Core.Contracts;
 using ApplicationOffice.Approvals.Core.Contracts.Models;
 using ApplicationOffice.Approvals.Data;
@@ -27,7 +28,7 @@ namespace ApplicationOffice.Approvals.Core.Services
                 .Where(x => x.Id == userId)
                 .ProjectTo<FullUserDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync()
-                ?? throw new NotFoundException("User not found");
+                ?? throw new NotFoundException("User not found", ApprovalsErrorCodes.UserNotFound);
         }
     }
 }

@@ -38,7 +38,10 @@ namespace ApplicationOffice.Common.Api.Tracing
             context.Response.ContentType = MediaTypeNames.Application.Json;
             context.Response.StatusCode = (int) status;
 
-            return context.Response.WriteAsync(new ErrorDetails { Message = msg, }.ToString());
+            var aoException = ex as AoException;
+
+            return context.Response
+                .WriteAsync(new ErrorDetails { Message = msg, ErrorCode = aoException?.ErrorCode }.ToString());
         }
 
         private static (HttpStatusCode, string errorMessage) GetStatusCodeWithMessage(Exception ex) => ex switch
@@ -47,6 +50,7 @@ namespace ApplicationOffice.Common.Api.Tracing
             BadRequestException => (HttpStatusCode.BadRequest, ex.Message),
             UnauthorizedException => (HttpStatusCode.Unauthorized, ex.Message),
             NotFoundException => (HttpStatusCode.NotFound, ex.Message),
+
             _ => (HttpStatusCode.InternalServerError, "Internal server error"),
         };
 
@@ -55,6 +59,7 @@ namespace ApplicationOffice.Common.Api.Tracing
     public class ErrorDetails
     {
         public string Message { get; set; } = default!;
+        public int? ErrorCode { get; set; }
 
         public override string ToString() => JsonSerializer.Serialize(this);
     }
@@ -62,7 +67,7 @@ namespace ApplicationOffice.Common.Api.Tracing
     public static class ExceptionMiddlewareExtensions
     {
         /// <summary>
-        ///     Adds default exception handling middleware.
+        /// Adds default exception handling middleware.
         /// </summary>
         /// <param name="applicationBuilder">Source application builder.</param>
         /// <returns>Original <paramref name="applicationBuilder" />.</returns>

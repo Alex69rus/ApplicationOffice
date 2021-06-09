@@ -2,6 +2,7 @@ using IdentityServer4.Models;
 
 namespace ApplicationOffice.Sso.IdentityServer.Controllers.Consent
 {
+#nullable enable
     public class ProcessConsentResult
     {
         public bool IsRedirect => RedirectUri != null;
@@ -14,4 +15,5 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Consent
         public bool HasValidationError => ValidationError != null;
         public string? ValidationError { get; set; }
     }
+#nullable restore
 }

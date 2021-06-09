@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationOffice.Approvals.Core.Constants;
 using ApplicationOffice.Approvals.Core.Contracts;
 using ApplicationOffice.Approvals.Core.Contracts.Enums;
 using ApplicationOffice.Approvals.Core.Contracts.Models;
@@ -38,10 +39,10 @@ namespace ApplicationOffice.Approvals.Core.Services
                 .ToArrayAsync();
             var applicationApprover = applicationApprovers.FirstOrDefault(x => x.UserId == approverId);
             if (applicationApprover is null)
-                throw new BadRequestException("Application approval not found");
+                throw new BadRequestException("Application approval not found", ApprovalsErrorCodes.ApprovalNotFound);
 
             if (applicationApprover.Status != Data.Enums.ApplicationApproverStatus.New)
-                throw new BadRequestException("Decision was already made.");
+                throw new BadRequestException("Decision was already made", ApprovalsErrorCodes.AlreadyMadeDecision);
 
             applicationApprover.SetStatus((Data.Enums.ApplicationApproverStatus) status);
 

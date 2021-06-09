@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationOffice.Approvals.Core.Constants;
 using ApplicationOffice.Approvals.Core.Contracts;
 using ApplicationOffice.Approvals.Core.Contracts.Enums;
 using ApplicationOffice.Approvals.Core.Contracts.Models;
@@ -64,7 +65,7 @@ namespace ApplicationOffice.Approvals.Core.Services
                     .Where(x => x.Id == applicationId)
                     .ProjectTo<FullApplicationDto>(_mapper.ConfigurationProvider)
                     .FirstOrDefaultAsync()
-                ?? throw new NotFoundException("Application not found.");
+                ?? throw new NotFoundException("Application not found.", ApprovalsErrorCodes.ApplicationNotFound);
         }
 
         public async Task<long> CreateApplication(CreateApplicationRequestDto request)
@@ -72,15 +73,17 @@ namespace ApplicationOffice.Approvals.Core.Services
             var author = await _dbContext.Users
                 .FirstOrDefaultAsync(x => x.Id == request.AuthorId);
             if (author is null)
-                throw new BadRequestException("User not found");
+                throw new BadRequestException("User not found", ApprovalsErrorCodes.UserNotFound);
             if (!author.UnitId.HasValue)
-                throw new BadRequestException("User is not in a Unit");
+                throw new BadRequestException("User is not in a Unit", ApprovalsErrorCodes.UserNotInUnit);
 
             var unitApprovers = await _dbContext.UnitApprovers
                 .Where(x => x.UnitId == author.UnitId && x.ApplicationType == (ApplicationType) request.Type)
                 .ToArrayAsync();
             if (!unitApprovers.Any())
-                throw new BadRequestException("Unit doesn't have configured approvers");
+                throw new BadRequestException(
+                    "Unit doesn't have configured approvers",
+                    ApprovalsErrorCodes.UnitWithoutApprovers);
 
             var newApplication = new Application(
                 request.Title,

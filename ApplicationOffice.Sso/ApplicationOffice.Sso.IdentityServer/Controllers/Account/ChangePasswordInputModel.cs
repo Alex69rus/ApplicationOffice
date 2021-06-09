@@ -6,7 +6,7 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Account
 {
     public class ChangePasswordInputModel : IValidatableObject
     {
-        public Uri? BackUrl { get; set; }
+        public Uri BackUrl { get; set; }
 
         [Required(ErrorMessage = "Необходимо указать текущий пароль")]
         public string Password { get; set; } = default!;

@@ -5,6 +5,8 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using ApplicationOffice.Common.Core.Exceptions;
 using IdentityServer4.Extensions;
+using ApplicationOffice.Sso.Core.Constants;
+
 
 namespace ApplicationOffice.Sso.IdentityServer.Tools
 {
@@ -21,7 +23,7 @@ namespace ApplicationOffice.Sso.IdentityServer.Tools
         {
             var sub = context.Subject.GetSubjectId();
             if (sub is null)
-                throw new NotFoundException("User not found");
+                throw new NotFoundException("User not found", SsoErrorCodes.UserAccountNotFound);
 
             var user = await _userManager.FindByIdAsync(sub);
             var claims = await _userManager.GetClaimsAsync(user);

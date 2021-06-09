@@ -2,14 +2,12 @@ using System;
 
 namespace ApplicationOffice.Common.Core.Exceptions
 {
-    [Serializable]
-    public class BadRequestException : Exception
+    public class BadRequestException : AoException
     {
-        public BadRequestException() { }
-        public BadRequestException(string message) : base(message) { }
-        public BadRequestException(string message, Exception inner) : base(message, inner) { }
-        protected BadRequestException(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        public BadRequestException(string message, int errorCode)
+            : base(message, errorCode) { }
+
+        public BadRequestException(string message, int errorCode, Exception inner)
+            : base(message, errorCode, inner) { }
     }
 }
