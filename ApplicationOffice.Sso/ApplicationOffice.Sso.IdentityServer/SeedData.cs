@@ -25,110 +25,106 @@ namespace ApplicationOffice.Sso.IdentityServer
                 .AddEntityFrameworkStores<SsoDbContext>()
                 .AddDefaultTokenProviders();
 
-            using (var serviceProvider = services.BuildServiceProvider())
+            using var serviceProvider = services.BuildServiceProvider();
+            using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<SsoDbContext>();
+            context.Database.Migrate();
+
+            var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<AoIdentityUser>>();
+            var petrov = userMgr.FindByNameAsync("pp.petrov").Result;
+            if (petrov == null)
             {
-                using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                petrov = new AoIdentityUser
                 {
-                    var context = scope.ServiceProvider.GetRequiredService<SsoDbContext>();
-                    context.Database.Migrate();
+                    UserName = "pp.petrov",
+                    Email = "PP.Petrov@mail.ru",
+                    EmailConfirmed = true,
+                };
+                var result = userMgr.CreateAsync(petrov, "P@$$w0rd").Result;
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
 
-                    var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<AoIdentityUser>>();
-                    var petrov = userMgr.FindByNameAsync("pp.petrov").Result;
-                    if (petrov == null)
-                    {
-                        petrov = new AoIdentityUser
-                        {
-                            UserName = "pp.petrov",
-                            Email = "PP.Petrov@mail.ru",
-                            EmailConfirmed = true,
-                        };
-                        var result = userMgr.CreateAsync(petrov, "P@$$w0rd").Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-
-                        result = userMgr.AddClaimsAsync(petrov, new Claim[]{
+                result = userMgr.AddClaimsAsync(petrov, new Claim[]{
                             new Claim(JwtClaimTypes.Name, "Петров Пётр"),
                             new Claim(JwtClaimTypes.GivenName, "Пётр"),
                             new Claim(JwtClaimTypes.FamilyName, "Петров"),
                             new Claim(AoClaims.UserId, "1"),
                         }).Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-                        Log.Debug("PP.Petrov created");
-                    }
-                    else
-                    {
-                        Log.Debug("PP.Petrov already exists");
-                    }
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
+                Log.Debug("PP.Petrov created");
+            }
+            else
+            {
+                Log.Debug("PP.Petrov already exists");
+            }
 
-                    var ivanov = userMgr.FindByNameAsync("ii.ivanov").Result;
-                    if (ivanov == null)
-                    {
-                        ivanov = new AoIdentityUser
-                        {
-                            UserName = "ii.ivanov",
-                            Email = "II.Ivanov@mail.ru",
-                            EmailConfirmed = true
-                        };
-                        var result = userMgr.CreateAsync(ivanov, "P@$$w0rd").Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
+            var ivanov = userMgr.FindByNameAsync("ii.ivanov").Result;
+            if (ivanov == null)
+            {
+                ivanov = new AoIdentityUser
+                {
+                    UserName = "ii.ivanov",
+                    Email = "II.Ivanov@mail.ru",
+                    EmailConfirmed = true
+                };
+                var result = userMgr.CreateAsync(ivanov, "P@$$w0rd").Result;
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
 
-                        result = userMgr.AddClaimsAsync(ivanov, new Claim[]{
+                result = userMgr.AddClaimsAsync(ivanov, new Claim[]{
                             new Claim(JwtClaimTypes.Name, "Иванов Иван"),
                             new Claim(JwtClaimTypes.GivenName, "Иван"),
                             new Claim(JwtClaimTypes.FamilyName, "Иванов"),
                             new Claim(AoClaims.UserId, "2"),
                         }).Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-                        Log.Debug("Ivanov created");
-                    }
-                    else
-                    {
-                        Log.Debug("Ivanov already exists");
-                    }
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
+                Log.Debug("Ivanov created");
+            }
+            else
+            {
+                Log.Debug("Ivanov already exists");
+            }
 
-                    var alexeev = userMgr.FindByNameAsync("aa.alexeev").Result;
-                    if (alexeev == null)
-                    {
-                        alexeev = new AoIdentityUser
-                        {
-                            UserName = "aa.alexeev",
-                            Email = "AA.Alexeev@mail.ru",
-                            EmailConfirmed = true
-                        };
-                        var result = userMgr.CreateAsync(alexeev, "P@$$w0rd").Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
+            var alexeev = userMgr.FindByNameAsync("aa.alexeev").Result;
+            if (alexeev == null)
+            {
+                alexeev = new AoIdentityUser
+                {
+                    UserName = "aa.alexeev",
+                    Email = "AA.Alexeev@mail.ru",
+                    EmailConfirmed = true
+                };
+                var result = userMgr.CreateAsync(alexeev, "P@$$w0rd").Result;
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
 
-                        result = userMgr.AddClaimsAsync(alexeev, new Claim[]{
+                result = userMgr.AddClaimsAsync(alexeev, new Claim[]{
                             new Claim(JwtClaimTypes.Name, "Алексеев Алексей"),
                             new Claim(JwtClaimTypes.GivenName, "Алексей"),
                             new Claim(JwtClaimTypes.FamilyName, "Алексеевич"),
                             new Claim(AoClaims.UserId, "3"),
                         }).Result;
-                        if (!result.Succeeded)
-                        {
-                            throw new Exception(result.Errors.First().Description);
-                        }
-                        Log.Debug("Alexeev created");
-                    }
-                    else
-                    {
-                        Log.Debug("Alexeev already exists");
-                    }
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
                 }
+                Log.Debug("Alexeev created");
+            }
+            else
+            {
+                Log.Debug("Alexeev already exists");
             }
         }
     }

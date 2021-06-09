@@ -7,7 +7,7 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers
 {
     public class TestUsers
     {
-        public static List<TestUser> Users = new List<TestUser>
+        public static readonly List<TestUser> Users = new()
         {
             new TestUser{SubjectId = "818727", Username = "alice", Password = "alice", 
                 Claims = 

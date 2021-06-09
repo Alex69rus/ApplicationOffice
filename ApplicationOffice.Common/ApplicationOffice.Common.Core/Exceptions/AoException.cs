@@ -4,7 +4,7 @@ namespace ApplicationOffice.Common.Core.Exceptions
 {
     public class AoException : Exception
     {
-        public readonly int ErrorCode;
+        public int ErrorCode { get; }
 
         public AoException(string message, int errorCode) : base(message)
         {

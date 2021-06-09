@@ -212,7 +212,7 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Consent
             return vm;
         }
 
-        private ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
+        private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
         {
             return new ScopeViewModel
             {
@@ -244,7 +244,7 @@ namespace ApplicationOffice.Sso.IdentityServer.Controllers.Consent
             };
         }
 
-        private ScopeViewModel GetOfflineAccessScope(bool check)
+        private static ScopeViewModel GetOfflineAccessScope(bool check)
         {
             return new ScopeViewModel
             {
